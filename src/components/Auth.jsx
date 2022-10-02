@@ -37,12 +37,14 @@ function Auth() {
                     id="pass"
                     placeholder="password"
                 />
-                <a href="/register" className="bg-">
-                    register
-                </a>
-                <button type="submit" className="bg-slate-800">
-                    login
-                </button>
+                <div id="auth_btns" className="flex flex-row justify-around">
+                    <a href="/register" className="btn">
+                        register
+                    </a>
+                    <button type="submit" className="btn">
+                        login
+                    </button>
+                </div>
             </form>
         </div>
     );
