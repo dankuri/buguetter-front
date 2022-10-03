@@ -1,7 +1,6 @@
-import { setAccessToken } from '../accesToken';
-
+import { setAccessToken, getAccessToken } from '../accesToken';
 export default function LoginForm() {
-    let api_url = import.meta.env.VITE_API_URL;
+    const api_url = import.meta.env.VITE_API_URL;
     let data = {};
 
     async function send_data() {
@@ -12,8 +11,13 @@ export default function LoginForm() {
             },
             body: JSON.stringify(data),
         })
+            .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                setAccessToken(data['token']);
+                // max age is 30 days in seconds
+                // TODO: change samesite if needed
+                document.cookie = `refresh_token=${data['refresh_token']}; secure; samesite=lax; max-age=2592000`;
+                // TODO: redirect to /
             })
             .catch((error) => console.error(error));
     }
@@ -28,7 +32,7 @@ export default function LoginForm() {
             console.error('empty password!');
         } else {
             data.login = login;
-            data.pass = password;
+            data.password = password;
             send_data();
         }
     }
