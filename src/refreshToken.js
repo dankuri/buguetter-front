@@ -1,4 +1,6 @@
-export async function refreshToken() {
+import { setAccessToken } from "./accesToken";
+
+export default async function refreshToken() {
     const api_url = import.meta.env.VITE_API_URL;
     await fetch(`${api_url}/refresh`, {
         method: 'POST',
@@ -15,7 +17,7 @@ export async function refreshToken() {
     })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
+            setAccessToken(data['access_token']);
         })
         .catch((error) => {
             console.error(error);
