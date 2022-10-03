@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getAccessToken } from '../accesToken.js';
+import refreshToken from '../refreshToken.js';
 import './App.css';
 import Auth from './Auth';
 import Navbar from './Navbar';
@@ -8,6 +9,8 @@ export default function App() {
 
     const [isLoading, setLoading] = useState(true);
     const [isFailed, setFailed] = useState(false);
+    const [userName, setUserName] = useState('');
+
     let isCheckingServer = false;
 
     function ErrorScreen() {
@@ -30,8 +33,20 @@ export default function App() {
         if (!isCheckingServer) setTimeout(checkServer, 5000);
     }
 
+    async function getUser(token) {
+        await fetch(`${api_url}/get_user_data`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => response.json())
+            .then(data => setUserName(data["name"]))
+            .catch(error => console.log(error))
+    }
+
     async function checkServer() {
-        console.log('checking server');
         isCheckingServer = true;
         await fetch(`${api_url}/status`)
             .then((response) => {
@@ -40,7 +55,6 @@ export default function App() {
                     setFailed(false);
                     clearTimeout(recheck);
                     isCheckingServer = false;
-                    console.log('server ok');
                 }
             })
             .catch((error) => {
@@ -53,6 +67,9 @@ export default function App() {
 
     useEffect(() => {
         checkServer();
+        refreshToken().then(() => {
+            getUser(getAccessToken());
+        })
     }, []);
 
     return (
@@ -60,7 +77,8 @@ export default function App() {
             {isLoading === false ? (
                 <div className="App">
                     <Navbar />
-                    <Auth />
+                    {!userName && <Auth />}
+                    <h2 className='h-screen flex text-3xl  items-center justify-center'>hello, {userName}</h2>
                 </div>
             ) : isFailed === false ? (
                 <LoadingScreen />

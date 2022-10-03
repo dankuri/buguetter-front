@@ -17,7 +17,8 @@ export default function LoginForm() {
                 // max age is 30 days in seconds
                 // TODO: change samesite if needed
                 document.cookie = `refresh_token=${data['refresh_token']}; secure; samesite=lax; max-age=2592000`;
-                // TODO: redirect to /
+                // TODO: redirect to /, delete reload
+                location.reload();
             })
             .catch((error) => console.error(error));
     }
