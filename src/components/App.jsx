@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAccessToken } from '../accesToken.js';
-import refreshToken from '../refreshToken.js';
+import { getAccessToken, refreshAccessToken } from '../accesToken.js';
 import './App.css';
 import Auth from './Auth';
 import Navbar from './Navbar';
@@ -51,7 +50,6 @@ export default function App() {
         await fetch(`${api_url}/status`)
             .then((response) => {
                 if (response.ok) {
-                    setLoading(false);
                     setFailed(false);
                     clearTimeout(recheck);
                     isCheckingServer = false;
@@ -67,20 +65,23 @@ export default function App() {
 
     useEffect(() => {
         checkServer();
-        refreshToken().then(() => {
-            getUser(getAccessToken());
-        })
+        refreshAccessToken().then(() => {
+            getUser(getAccessToken()).then(() => {
+                setLoading(false);
+            });
+        }).catch((error) => console.error(error))
     }, []);
 
     return (
         <>
-            {isLoading === false ? (
+            {!isLoading ? (
                 <div className="App">
                     <Navbar />
-                    {!userName && <Auth />}
-                    <h2 className='h-screen flex text-3xl  items-center justify-center'>hello, {userName}</h2>
+                    {!userName ? <Auth /> : 
+                        <h2 className='h-screen flex text-3xl  items-center justify-center'>hello, {userName}</h2>
+                    }
                 </div>
-            ) : isFailed === false ? (
+            ) : !isFailed ? (
                 <LoadingScreen />
             ) : (
                 <ErrorScreen />
