@@ -7,8 +7,7 @@ export const setAccessToken = (inputToken) => {
 };
 
 export const refreshAccessToken = async () => {
-    const api_url = import.meta.env.VITE_API_URL;
-    await fetch(`${api_url}/refresh`, {
+    await fetch(`/api/refresh`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

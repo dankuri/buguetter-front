@@ -1,24 +1,23 @@
 import { setAccessToken, getAccessToken } from '../accesToken';
+import { Link, useNavigate } from 'react-router-dom';
 export default function LoginForm() {
-    const api_url = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate()
+    
     let data = {};
 
     async function send_data() {
-        await fetch(`${api_url}/login`, {
+        await fetch(`/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                setAccessToken(data['token']);
-                // max age is 30 days in seconds
-                // TODO: change samesite if needed
-                document.cookie = `refresh_token=${data['refresh_token']}; secure; samesite=lax; max-age=2592000`;
+            .then((response) => response.json()) 
+            .then((response_data) => {
+                setAccessToken(response_data['token']);
                 // TODO: redirect to /, delete reload
-                location.reload();
+                navigate('/')
             })
             .catch((error) => console.error(error));
     }
@@ -39,28 +38,30 @@ export default function LoginForm() {
     }
 
     return (
-        <form action="#" onSubmit={check_data}>
-            <input
-                type="login"
-                className="block m-4 p-2 text-2xl rounded-lg"
-                id="login"
-                placeholder="login"
-            />
-            <input
-                type="password"
-                className="block m-4 p-2 text-2xl rounded-lg"
-                name="pass"
-                id="pass"
-                placeholder="password"
-            />
-            <div id="auth_btns" className="flex flex-row justify-around">
-                <a href="/register" className="btn">
-                    register
-                </a>
-                <button type="submit" className="btn">
-                    login
-                </button>
-            </div>
-        </form>
+        <div className="h-screen flex flex-col justify-center items-center">
+            <form id="auth-form" action="#" onSubmit={check_data}>
+                <input
+                    type="login"
+                    className="block m-4 p-2 text-2xl rounded-lg"
+                    id="login"
+                    placeholder="login"
+                />
+                <input
+                    type="password"
+                    className="block m-4 p-2 text-2xl rounded-lg"
+                    name="pass"
+                    id="pass"
+                    placeholder="password"
+                />
+                <div id="auth_btns" className="flex flex-row justify-around">
+                    <Link to={'/register'} className="btn link">
+                        register
+                    </Link>
+                    <button type="submit" className="btn">
+                        login
+                    </button>
+                </div>
+            </form>
+        </div>
     );
 }
