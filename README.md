@@ -14,7 +14,7 @@ deployment links:
 ---
 
 for local server: 
-- add file `.env` with `VITE_API_URL=<your backend url>`
+- add file `.env` in project's root folder with `VITE_API_URL=<your backend url>`
 
 - launch development mode:
 ```bash
