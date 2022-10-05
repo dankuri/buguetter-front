@@ -13,6 +13,9 @@ deployment links:
 
 ---
 
+for local server: 
+- add file `.env` with `VITE_API_URL=<your backend url>`
+
 - launch development mode:
 ```bash
 npm i
