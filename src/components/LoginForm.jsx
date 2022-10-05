@@ -25,13 +25,13 @@ export default function LoginForm() {
             <form id="auth-form" action="#" onSubmit={send_login}>
                 <input
                     type="login"
-                    className="block m-4 p-2 text-2xl rounded-lg"
+                    className="block m-4 p-2 text-2xl rounded-lg bg-slate-700"
                     id="login"
                     placeholder="login"
                 />
                 <input
                     type="password"
-                    className="block m-4 p-2 text-2xl rounded-lg"
+                    className="block m-4 p-2 text-2xl rounded-lg bg-slate-700"
                     name="pass"
                     id="pass"
                     placeholder="password"

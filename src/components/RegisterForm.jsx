@@ -34,19 +34,19 @@ export default function RegisterForm() {
             <form id="auth-form" action="#" onSubmit={check_data}>
                 <input
                     type="name"
-                    className="block m-4 p-2 text-2xl rounded-lg"
+                    className="block m-4 p-2 text-2xl rounded-lg bg-slate-700"
                     id="name"
                     placeholder="name"
                 />
                 <input
                     type="login"
-                    className="block m-4 p-2 text-2xl rounded-lg"
+                    className="block m-4 p-2 text-2xl rounded-lg bg-slate-700"
                     id="login"
                     placeholder="login"
                 />
                 <input
                     type="password"
-                    className="block m-4 p-2 text-2xl rounded-lg"
+                    className="block m-4 p-2 text-2xl rounded-lg bg-slate-700"
                     name="pass"
                     id="pass"
                     placeholder="password"
