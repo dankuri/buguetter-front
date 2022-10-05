@@ -33,7 +33,8 @@ export default function App() {
 
     function checkServer() {
         fetch(`/api/status`)
-            .then(() => {
+            .then((response) => {
+                console.log(response);
                 setFailed(false);
             })
             .catch((error) => {
@@ -43,6 +44,7 @@ export default function App() {
     }
 
     useEffect(() => {
+        console.log('App useEffect');
         checkServer();
         if (!isFailed) {
             if (!isLoggedIn) {
@@ -55,7 +57,7 @@ export default function App() {
         } else {
             console.log('smth wrong bruh');
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, isFailed]);
 
     return (
         <>
