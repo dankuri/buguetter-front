@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './components/App';
+import { BrowserRouter } from 'react-router-dom';
 import './styles/index.css';
-import { BrowserRouter} from "react-router-dom"
-
+import App from './components/App';
+import { AuthProvider } from './components/AuthProvider';
 if (process.env.NODE_ENV === 'development') {
     document.title = 'dev buguetter';
 }
@@ -11,7 +11,9 @@ if (process.env.NODE_ENV === 'development') {
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <BrowserRouter>
-            <App />
+            <AuthProvider>
+                <App />
+            </AuthProvider>
         </BrowserRouter>
     </React.StrictMode>
 );
