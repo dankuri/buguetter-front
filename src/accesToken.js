@@ -11,14 +11,8 @@ export const refreshAccessToken = async () => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${
-                document.cookie
-                    .split('; ')
-                    .find((row) => row.startsWith('refresh_token='))
-                    ?.split('=')[1]
-            }`,
         },
-        body: JSON.stringify({}),
+        credentials: 'include'
     })
         .then((response) => response.json())
         .then((data) => {
