@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 
 import { getAccessToken, refreshAccessToken } from '../accesToken.js';
 import { useAuthContext } from './AuthProvider.jsx';
@@ -66,9 +66,23 @@ export default function App() {
                         <Route
                             path="/"
                             element={
-                                <h2 className="h-screen flex text-3xl  items-center justify-center">
-                                    hello, {userName}
-                                </h2>
+                                isLoggedIn ? (
+                                    <h2 className="h-screen flex text-3xl items-center justify-center">
+                                        hello, {userName}
+                                    </h2>
+                                ) : (
+                                    <>
+                                        <h2 className="h-screen flex flex-col text-3xl items-center justify-center">
+                                            ur not logged in, go to
+                                            <Link
+                                                to={'/login'}
+                                                className={'btn'}
+                                            >
+                                                login
+                                            </Link>
+                                        </h2>
+                                    </>
+                                )
                             }
                         />
                         <Route path="/login" element={<LoginForm />} />
