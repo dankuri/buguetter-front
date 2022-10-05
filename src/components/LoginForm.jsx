@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api_login } from '../auth';
+import { useAuthContext } from './AuthProvider';
 export default function LoginForm() {
-
-    function check_data(ev) {
+    const navigate = useNavigate();
+    const { setLoggedIn } = useAuthContext();
+    function send_login(ev) {
         ev.preventDefault();
         let login = document.querySelector('#login').value;
         let password = document.querySelector('#pass').value;
@@ -11,13 +13,16 @@ export default function LoginForm() {
         } else if (password === '') {
             console.error('empty password!');
         } else {
-            api_login({login: login, password: password})
+            api_login({ login: login, password: password }).then(() => {
+                setLoggedIn(true);
+                navigate('/');
+            });
         }
     }
 
     return (
         <div className="h-screen flex flex-col justify-center items-center">
-            <form id="auth-form" action="#" onSubmit={check_data}>
+            <form id="auth-form" action="#" onSubmit={send_login}>
                 <input
                     type="login"
                     className="block m-4 p-2 text-2xl rounded-lg"
