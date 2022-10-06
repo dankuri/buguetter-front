@@ -14,11 +14,8 @@ const apiLogin = async (loginData: { login: string; password: string }) => {
     if (data['token']) {
         setAccessToken(data['token']);
         return 'success';
-    } else if (data['response'] === 'wrong password') {
-        return 'wrong password!';
-    } else if (data['response'] === 'none user') {
-        return 'no such user!';
-    }
+    } else if (data['response'] === 'wrong password') return 'wrong password!';
+    else if (data['response'] === 'none user') return 'no such user!';
 };
 
 const apiRegister = async (registerData: {
@@ -34,11 +31,8 @@ const apiRegister = async (registerData: {
         body: JSON.stringify(registerData)
     });
     const data = await res.json();
-    if (data['response'] === true) {
-        return 'success';
-    } else {
-        return data['response'];
-    }
+    if (data['response'] === true) return 'success';
+    else return data['response'];
 };
 
 export const apiLoginCatching = catchNull(apiLogin);
