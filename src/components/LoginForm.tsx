@@ -1,6 +1,6 @@
 import { FormEventHandler, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { apiLogin } from '../auth';
+import { apiLoginCatching } from '../auth';
 import Input from './Input';
 
 type Props = {
@@ -11,28 +11,37 @@ export default function LoginForm({ setLoggedIn }: Props) {
     const navigate = useNavigate();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-    const sendLogin: FormEventHandler<HTMLFormElement> = ev => {
+    const sendLogin: FormEventHandler<HTMLFormElement> = async ev => {
         ev.preventDefault();
-        if (login === '') {
-            console.error('empty login!');
-        } else if (password === '') {
-            console.error('empty password!');
-        } else {
-            apiLogin({ login: login, password: password }).then(() => {
+        if (login === '') setError('empty login!');
+        else if (password === '') setError('empty password!');
+        else {
+            const response = await apiLoginCatching({ login, password });
+            if (response == 'success') {
                 setLoggedIn(true);
                 navigate('/');
-            });
+            } else if (typeof response == 'string') {
+                setError(response);
+            }
         }
     };
 
     return (
         <div className="h-screen flex flex-col justify-center items-center">
+            {error && <h2>{error}</h2>}
             <form id="auth-form" action="#" onSubmit={sendLogin}>
-                <Input placeholder="login" value={login} onChange={setLogin} />
+                <Input
+                    placeholder="login"
+                    value={login}
+                    type="text"
+                    onChange={setLogin}
+                />
                 <Input
                     placeholder="password"
                     value={password}
+                    type="password"
                     onChange={setPassword}
                 />
                 <div id="auth_btns" className="flex flex-row justify-around">

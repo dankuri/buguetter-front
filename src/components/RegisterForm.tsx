@@ -1,6 +1,6 @@
 import { FormEventHandler, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { apiRegister, apiLogin } from '../auth';
+import { apiRegisterCatching, apiLoginCatching } from '../auth';
 import Input from './Input';
 
 type Props = {
@@ -12,27 +12,39 @@ export default function RegisterForm({ setLoggedIn }: Props) {
     const [name, setName] = useState('');
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-    const sendRegister: FormEventHandler<HTMLFormElement> = ev => {
+    const sendRegister: FormEventHandler<HTMLFormElement> = async ev => {
         ev.preventDefault();
-        if (name === '') console.error('empty name');
-        else if (login === '') console.error('empty login!');
-        else if (password === '') console.error('empty password!');
+        if (name === '') setError('empty name!');
+        else if (login === '') setError('empty login!');
+        else if (password === '') setError('empty password!');
         else {
-            apiRegister({ name, login, password }).then(() => {
-                apiLogin({
+            const registerResponse = await apiRegisterCatching({
+                name,
+                login,
+                password
+            });
+            if (registerResponse === 'success') {
+                const loginResponse = await apiLoginCatching({
                     login,
                     password
-                }).then(() => {
+                });
+                if (loginResponse == 'success') {
                     setLoggedIn(true);
                     navigate('/');
-                });
-            });
+                } else {
+                    setError('bad login');
+                }
+            } else if (typeof registerResponse == 'string') {
+                setError(registerResponse);
+            }
         }
     };
 
     return (
         <div className="h-screen flex flex-col justify-center items-center">
+            {error && <h2>{error}</h2>}
             <form id="auth-form" action="#" onSubmit={sendRegister}>
                 <Input
                     placeholder="name"

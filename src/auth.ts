@@ -1,9 +1,7 @@
 import { setAccessToken } from './accessToken';
+import { catchNull } from './catchNull';
 
-export const apiLogin = async (loginData: {
-    login: string;
-    password: string;
-}) => {
+const apiLogin = async (loginData: { login: string; password: string }) => {
     const res = await fetch('/api/login', {
         method: 'POST',
         headers: {
@@ -11,15 +9,19 @@ export const apiLogin = async (loginData: {
         },
         body: JSON.stringify(loginData)
     });
-    try {
-        const data = await res.json();
+    const data = await res.json();
+    // TODO: create response codes to not check every response like dis
+    if (data['token']) {
         setAccessToken(data['token']);
-    } catch (error) {
-        throw error;
+        return 'success';
+    } else if (data['response'] === 'wrong password') {
+        return 'wrong password!';
+    } else if (data['response'] === 'none user') {
+        return 'no such user!';
     }
 };
 
-export const apiRegister = async (registerData: {
+const apiRegister = async (registerData: {
     name: string;
     login: string;
     password: string;
@@ -31,12 +33,13 @@ export const apiRegister = async (registerData: {
         },
         body: JSON.stringify(registerData)
     });
-    try {
-        const data = await res.json();
-        if (data['response'] !== true) {
-            throw data['response'];
-        }
-    } catch (error) {
-        throw error;
+    const data = await res.json();
+    if (data['response'] === true) {
+        return 'success';
+    } else {
+        return data['response'];
     }
 };
+
+export const apiLoginCatching = catchNull(apiLogin);
+export const apiRegisterCatching = catchNull(apiRegister);
