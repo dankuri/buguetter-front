@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 
-import { getAccessToken, refreshAccessToken } from '../accessToken.js';
+import { getAccessToken } from '../accessToken.js';
 import useServerCheck from '../hooks/useServerCheck.js';
+import { getUserCatching, refreshUser } from '../refreshUser.js';
 
 import ErrorScreen from './ErrorScreen.jsx';
 import LoadingScreen from './LoadingScreen.jsx';
@@ -17,40 +18,26 @@ export default function App() {
     const isFailed = useServerCheck();
     const navigate = useNavigate();
 
-    async function getUser(token: string) {
-        const res = await fetch(`/api/get_user_data`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            }
-        });
-        try {
-            const data = await res.json();
-            setUserName(data['name']);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    useEffect(() => {
-        console.log('App useEffect');
+    const asyncEffect = async () => {
         if (!isFailed) {
             if (!isLoggedIn) {
-                // FIXME: handle errors for refreshAccessToken
-                try {
-                    refreshAccessToken();
-                    getUser(getAccessToken());
-                } catch (error) {
+                const name = await refreshUser();
+                if (name) {
+                    setUserName(name);
+                    setLoggedIn(true);
+                } else {
                     navigate('/login');
                 }
-            } else {
-                getUser(getAccessToken());
+            } else if (!userName) {
+                const name = await getUserCatching(getAccessToken());
+                setUserName(name);
             }
             setLoading(false);
-        } else {
-            console.log('smth wrong bruh');
         }
+    };
+
+    useEffect(() => {
+        asyncEffect();
     }, [isLoggedIn, isFailed]);
 
     return (
