@@ -34,11 +34,22 @@ export default function RegisterForm({ setLoggedIn }: Props) {
     return (
         <div className="h-screen flex flex-col justify-center items-center">
             <form id="auth-form" action="#" onSubmit={sendRegister}>
-                <Input placeholder="name" value={name} onChange={setName} />
-                <Input placeholder="login" value={login} onChange={setLogin} />
+                <Input
+                    placeholder="name"
+                    value={name}
+                    type="text"
+                    onChange={setName}
+                />
+                <Input
+                    placeholder="login"
+                    value={login}
+                    type="text"
+                    onChange={setLogin}
+                />
                 <Input
                     placeholder="password"
                     value={password}
+                    type="password"
                     onChange={setPassword}
                 />
 
