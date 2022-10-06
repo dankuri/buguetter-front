@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 
-import { getAccessToken, refreshAccessToken } from '../accesToken.js';
+import { getAccessToken, refreshAccessToken } from '../accessToken.js';
 import useServerCheck from '../hooks/useServerCheck.js';
 
 import ErrorScreen from './ErrorScreen.jsx';
@@ -62,8 +62,7 @@ export default function App() {
                         <Route
                             path="/"
                             element={
-                                // FIXME: temp fix of no user
-                                userName ? (
+                                isLoggedIn ? (
                                     <h2 className="h-screen flex text-3xl items-center justify-center">
                                         hello, {userName}
                                     </h2>
