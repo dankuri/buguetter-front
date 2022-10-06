@@ -23,6 +23,13 @@ export default ({ mode }) => {
             port: 8081,
             cors: true,
             host: 'localhost',
+            proxy: {
+                '/api': {
+                    target: process.env.VITE_API_URL,
+                    changeOrigin: true,
+                    secure: false
+                }
+            }
         },
     });
 }
