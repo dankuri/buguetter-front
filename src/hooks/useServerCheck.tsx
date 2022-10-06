@@ -4,8 +4,7 @@ const useServerCheck = () => {
     const [failed, setFailed] = useState(false);
     fetch(`/api/status`)
         .then(response => {
-            if (response.status > 400) {
-                console.log(response);
+            if (response.status >= 400) {
                 setFailed(true);
             } else {
                 setFailed(false);
