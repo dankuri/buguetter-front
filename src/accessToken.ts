@@ -8,7 +8,7 @@ export const setAccessToken = (inputToken: string) => {
 
 export const refreshAccessToken = async () => {
     const res = await fetch(`/api/refresh`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         },
