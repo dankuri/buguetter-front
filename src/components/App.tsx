@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 
 import { getAccessToken, refreshAccessToken } from '../accesToken.js';
-import { useAuthContext } from './AuthProvider.jsx';
+import useServerCheck from '../hooks/useServerCheck.js';
 
 import ErrorScreen from './ErrorScreen.jsx';
 import LoadingScreen from './LoadingScreen.jsx';
@@ -12,48 +12,42 @@ import Navbar from './Navbar';
 
 export default function App() {
     const [isLoading, setLoading] = useState(true);
-    const [isFailed, setFailed] = useState(false);
+    const [isLoggedIn, setLoggedIn] = useState(false);
     const [userName, setUserName] = useState('');
-    const { isLoggedIn } = useAuthContext();
-
+    const isFailed = useServerCheck();
     const navigate = useNavigate();
 
-    async function getUser(token) {
-        await fetch(`/api/get_user_data`, {
+    async function getUser(token: string) {
+        const res = await fetch(`/api/get_user_data`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => setUserName(data['name']))
-            .catch((error) => console.log(error));
-    }
-
-    function checkServer() {
-        fetch(`/api/status`)
-            .then((response) => {
-                console.log(response);
-                setFailed(false);
-            })
-            .catch((error) => {
-                console.error(error);
-                setFailed(true);
-            });
+                Authorization: `Bearer ${token}`
+            }
+        });
+        try {
+            const data = await res.json();
+            setUserName(data['name']);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     useEffect(() => {
         console.log('App useEffect');
-        checkServer();
         if (!isFailed) {
             if (!isLoggedIn) {
-                refreshAccessToken()
-                    .then(getUser(getAccessToken()))
-                    .catch(navigate('/login'));
-                setLoading(false);
+                // FIXME: handle errors for refreshAccessToken
+                try {
+                    refreshAccessToken();
+                    getUser(getAccessToken());
+                } catch (error) {
+                    navigate('/login');
+                }
+            } else {
+                getUser(getAccessToken());
             }
-            getUser(getAccessToken()).then(setLoading(false));
+            setLoading(false);
         } else {
             console.log('smth wrong bruh');
         }
@@ -68,7 +62,8 @@ export default function App() {
                         <Route
                             path="/"
                             element={
-                                isLoggedIn ? (
+                                // FIXME: temp fix of no user
+                                userName ? (
                                     <h2 className="h-screen flex text-3xl items-center justify-center">
                                         hello, {userName}
                                     </h2>
@@ -87,16 +82,15 @@ export default function App() {
                                 )
                             }
                         />
-                        <Route path="/login" element={<LoginForm />} />
-                        <Route path="/register" element={<RegisterForm />} />
+                        <Route
+                            path="/login"
+                            element={<LoginForm setLoggedIn={setLoggedIn} />}
+                        />
+                        <Route
+                            path="/register"
+                            element={<RegisterForm setLoggedIn={setLoggedIn} />}
+                        />
                     </Routes>
-                    {/* {!userName ? (
-                        <Auth />
-                    ) : (
-                        <h2 className="h-screen flex text-3xl  items-center justify-center">
-                            hello, {userName}
-                        </h2>
-                    )} */}
                 </div>
             ) : !isFailed ? (
                 <LoadingScreen />
