@@ -1,12 +1,14 @@
 import { FormEventHandler, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiLogin } from '../auth';
-import { useAuthContext } from './AuthProvider';
 import Input from './Input';
 
-export default function LoginForm() {
+type Props = {
+    setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function LoginForm({ setLoggedIn }: Props) {
     const navigate = useNavigate();
-    const { setLoggedIn } = useAuthContext();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
 
