@@ -1,6 +1,6 @@
 import { FormEventHandler, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { api_login } from '../auth';
+import { apiLogin } from '../auth';
 import { useAuthContext } from './AuthProvider';
 import Input from './Input';
 
@@ -17,7 +17,7 @@ export default function LoginForm() {
         } else if (password === '') {
             console.error('empty password!');
         } else {
-            api_login({ login: login, password: password }).then(() => {
+            apiLogin({ login: login, password: password }).then(() => {
                 setLoggedIn(true);
                 navigate('/');
             });

@@ -1,6 +1,6 @@
 import { FormEventHandler, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { api_register, api_login } from '../auth';
+import { apiRegister, apiLogin } from '../auth';
 import { useAuthContext } from './AuthProvider';
 import Input from './Input';
 
@@ -17,17 +17,15 @@ export default function RegisterForm() {
         else if (login === '') console.error('empty login!');
         else if (password === '') console.error('empty password!');
         else {
-            api_register({ name: name, login: login, password: password }).then(
-                () => {
-                    api_login({
-                        login: login,
-                        password: password
-                    }).then(() => {
-                        setLoggedIn(true);
-                        navigate('/');
-                    });
-                }
-            );
+            apiRegister({ name, login, password }).then(() => {
+                apiLogin({
+                    login,
+                    password
+                }).then(() => {
+                    setLoggedIn(true);
+                    navigate('/');
+                });
+            });
         }
     };
 

@@ -1,35 +1,42 @@
 import { setAccessToken } from './accesToken';
 
-export const api_login = async (login_data) => {
-    await fetch('/api/login', {
+export const apiLogin = async (login_data: {
+    login: string;
+    password: string;
+}) => {
+    const res = await fetch('/api/login', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(login_data),
-    })
-        .then((response) => response.json())
-        .then((response_json) => {
-            setAccessToken(response_json['token']);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+        body: JSON.stringify(login_data)
+    });
+    try {
+        const data = await res.json();
+        setAccessToken(data['token']);
+    } catch (error) {
+        console.error(error);
+    }
 };
 
-export const api_register = async (register_data) => {
-    await fetch(`/api/register`, {
+export const apiRegister = async (register_data: {
+    name: string;
+    login: string;
+    password: string;
+}) => {
+    const res = await fetch(`/api/register`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(register_data),
-    })
-        .then((response) => response.json())
-        .then((response_json) => {
-            if (response_json['response'] != true) {
-                throw new Error(response_json['response']);
-            }
-        })
-        .catch((error) => console.error(error));
+        body: JSON.stringify(register_data)
+    });
+    try {
+        const data = await res.json();
+        if (data['response'] !== true) {
+            throw data['response'];
+        }
+    } catch (error) {
+        console.error(error);
+    }
 };
