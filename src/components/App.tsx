@@ -36,9 +36,7 @@ export default function App() {
         }
     };
 
-    useEffect(() => {
-        asyncEffect();
-    }, [isLoggedIn, isFailed]);
+    useEffect(() => void asyncEffect(), [isLoggedIn, isFailed]);
 
     return (
         <>
