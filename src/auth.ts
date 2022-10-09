@@ -1,5 +1,5 @@
 import { catchNull } from './catchNull';
-import { errors } from './errors';
+import { errors, statusErrorHandler } from './errors';
 
 const apiLogin = async (loginData: { login: string; password: string }) => {
     const res = await fetch('/api/login', {
@@ -10,17 +10,19 @@ const apiLogin = async (loginData: { login: string; password: string }) => {
         body: JSON.stringify(loginData)
     });
     const { msg, error }: ApiResponse = await res.json();
-    console.log(msg);
-    console.log(error);
-    if (msg == 'success') {
-        return 'success';
-    } else if (error in errors) {
-        return errors[error];
-    } else if (error) {
-        return 'unknown error';
-    } else {
-        return 'invalid response';
-    }
+    return statusErrorHandler({ msg, error });
+};
+
+const apiLogout = async () => {
+    const res = await fetch('/api/logout', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    });
+    const { msg, error }: ApiResponse = await res.json();
+    return statusErrorHandler({ msg, error });
 };
 
 const apiRegister = async (registerData: {
@@ -36,16 +38,9 @@ const apiRegister = async (registerData: {
         body: JSON.stringify(registerData)
     });
     const { msg, error }: ApiResponse = await res.json();
-    if (msg == 'success') {
-        return 'success';
-    } else if (typeof msg == 'number' && msg in errors) {
-        return errors[msg];
-    } else if (typeof msg == 'number') {
-        return 'unknown error';
-    } else {
-        return 'invalid response';
-    }
+    return statusErrorHandler({ msg, error });
 };
 
 export const apiLoginCatching = catchNull(apiLogin);
+export const apiLogoutCatching = catchNull(apiLogout);
 export const apiRegisterCatching = catchNull(apiRegister);
