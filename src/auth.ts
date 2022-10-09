@@ -1,5 +1,5 @@
-import { setAccessToken } from './accessToken';
 import { catchNull } from './catchNull';
+import { errors } from './errors';
 
 const apiLogin = async (loginData: { login: string; password: string }) => {
     const res = await fetch('/api/login', {
@@ -9,13 +9,18 @@ const apiLogin = async (loginData: { login: string; password: string }) => {
         },
         body: JSON.stringify(loginData)
     });
-    const data = await res.json();
-    // TODO: create response codes to not check every response like dis
-    if (data['token']) {
-        setAccessToken(data['token']);
+    const { msg, error }: ApiResponse = await res.json();
+    console.log(msg);
+    console.log(error);
+    if (msg == 'success') {
         return 'success';
-    } else if (data['response'] === 'wrong password') return 'wrong password!';
-    else if (data['response'] === 'none user') return 'no such user!';
+    } else if (error in errors) {
+        return errors[error];
+    } else if (error) {
+        return 'unknown error';
+    } else {
+        return 'invalid response';
+    }
 };
 
 const apiRegister = async (registerData: {
@@ -30,9 +35,16 @@ const apiRegister = async (registerData: {
         },
         body: JSON.stringify(registerData)
     });
-    const data = await res.json();
-    if (data['response'] === true) return 'success';
-    else return data['response'];
+    const { msg, error }: ApiResponse = await res.json();
+    if (msg == 'success') {
+        return 'success';
+    } else if (typeof msg == 'number' && msg in errors) {
+        return errors[msg];
+    } else if (typeof msg == 'number') {
+        return 'unknown error';
+    } else {
+        return 'invalid response';
+    }
 };
 
 export const apiLoginCatching = catchNull(apiLogin);
