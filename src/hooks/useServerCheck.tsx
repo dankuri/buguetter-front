@@ -1,19 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const useServerCheck = () => {
     const [failed, setFailed] = useState(false);
-    fetch(`/api/status`)
-        .then(response => {
-            if (response.status >= 400) {
+
+    useEffect(() => {
+        fetch(`/api/status`)
+            .then(response => {
+                setFailed(response.status >= 400);
+            })
+            .catch(error => {
+                console.error(error);
                 setFailed(true);
-            } else {
-                setFailed(false);
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            setFailed(true);
-        });
+            });
+    }, []);
     return failed;
 };
 
