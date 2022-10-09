@@ -1,13 +1,15 @@
 import { FormEventHandler, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiRegisterCatching, apiLoginCatching } from '../auth';
+import { refreshUser } from '../refreshUser';
 import Input from './Input';
 
 type Props = {
+    setUserName: React.Dispatch<React.SetStateAction<string>>;
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function RegisterForm({ setLoggedIn }: Props) {
+export default function RegisterForm({ setUserName, setLoggedIn }: Props) {
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [login, setLogin] = useState('');
@@ -31,8 +33,14 @@ export default function RegisterForm({ setLoggedIn }: Props) {
                     password
                 });
                 if (loginResponse == 'success') {
-                    setLoggedIn(true);
-                    navigate('/');
+                    const name = await refreshUser();
+                    if (name) {
+                        setUserName(name);
+                        setLoggedIn(true);
+                        navigate('/');
+                    } else {
+                        setError('cannot get name');
+                    }
                 } else {
                     setError('bad login');
                 }

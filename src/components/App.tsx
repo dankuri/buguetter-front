@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 
 import useServerCheck from '../hooks/useServerCheck.js';
-import { getUserCatching, refreshUser } from '../refreshUser.js';
+import { refreshUser } from '../refreshUser.js';
 
 import ErrorScreen from './ErrorScreen.jsx';
 import LoadingScreen from './LoadingScreen.jsx';
@@ -19,17 +19,12 @@ export default function App() {
 
     const asyncEffect = async () => {
         if (!isFailed) {
-            if (!isLoggedIn) {
-                const name = await refreshUser();
-                if (name) {
-                    setUserName(name);
-                    setLoggedIn(true);
-                } else {
-                    navigate('/login');
-                }
-            } else if (!userName) {
-                const name = await getUserCatching();
+            const name = await refreshUser();
+            if (name) {
                 setUserName(name);
+                setLoggedIn(true);
+            } else {
+                navigate('/login');
             }
             setLoading(false);
         }
@@ -67,11 +62,21 @@ export default function App() {
                         />
                         <Route
                             path="/login"
-                            element={<LoginForm setLoggedIn={setLoggedIn} />}
+                            element={
+                                <LoginForm
+                                    setUserName={setUserName}
+                                    setLoggedIn={setLoggedIn}
+                                />
+                            }
                         />
                         <Route
                             path="/register"
-                            element={<RegisterForm setLoggedIn={setLoggedIn} />}
+                            element={
+                                <RegisterForm
+                                    setUserName={setUserName}
+                                    setLoggedIn={setLoggedIn}
+                                />
+                            }
                         />
                     </Routes>
                 </div>
