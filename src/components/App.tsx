@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 
-import { getAccessToken } from '../accessToken.js';
 import useServerCheck from '../hooks/useServerCheck.js';
 import { getUserCatching, refreshUser } from '../refreshUser.js';
 
@@ -29,7 +28,7 @@ export default function App() {
                     navigate('/login');
                 }
             } else if (!userName) {
-                const name = await getUserCatching(getAccessToken());
+                const name = await getUserCatching();
                 setUserName(name);
             }
             setLoading(false);

@@ -1,15 +1,15 @@
 import { catchNull } from './catchNull';
-import { getAccessToken, setAccessToken } from './accessToken';
 
-const getUser = async (token: string) => {
+const getUser = async () => {
     const res = await fetch(`/api/get_user_data`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-        }
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
     });
     const data = await res.json();
+    console.log(data);
     if (data.name) return data.name;
     else return false;
 };
@@ -23,8 +23,7 @@ const refresh = async () => {
         credentials: 'include'
     });
     const data = await res.json();
-    if (data.access_token) {
-        setAccessToken(data['access_token']);
+    if ((data.msg = 'new token')) {
         return true;
     } else return false;
 };
@@ -35,7 +34,7 @@ export const getUserCatching = catchNull(getUser);
 
 export const refreshUser = async () => {
     if (await refreshCathing()) {
-        const name: string = await getUserCatching(getAccessToken());
+        const name: string = await getUserCatching();
         if (name !== '') {
             return name;
         }
