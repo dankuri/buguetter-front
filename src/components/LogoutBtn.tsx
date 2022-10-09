@@ -17,7 +17,7 @@ export default function LogoutBtn({ setLoggedIn }: Props) {
     return (
         <div className="fixed right-5 top-5 text-right">
             {error && <h2 className="">{error}</h2>}
-            <button className="btn w-32" onClick={logout}>
+            <button className="btn " onClick={logout}>
                 logout
             </button>
         </div>
