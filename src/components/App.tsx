@@ -41,7 +41,7 @@ export default function App() {
         <>
             {!isLoading ? (
                 <div className="App">
-                    <Navbar />
+                    <Navbar isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />
                     <Routes>
                         <Route
                             path="/"
