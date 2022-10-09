@@ -10,3 +10,15 @@ export const errors: { [key: number]: string } = {
     9: 'token modified elsewhere',
     10: 'token revoked'
 };
+
+export const statusErrorHandler = ({ msg, error }: ApiResponse) => {
+    if (msg == 'success') {
+        return 'success';
+    } else if (error in errors) {
+        return errors[error];
+    } else if (error) {
+        return 'unknown error';
+    } else {
+        return 'invalid response';
+    }
+};
