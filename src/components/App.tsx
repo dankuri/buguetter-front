@@ -36,7 +36,11 @@ export default function App() {
         <>
             {!isLoading ? (
                 <div className="App">
-                    <Navbar isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />
+                    <Navbar
+                        setUserName={setUserName}
+                        isLoggedIn={isLoggedIn}
+                        setLoggedIn={setLoggedIn}
+                    />
                     <Routes>
                         <Route
                             path="/"

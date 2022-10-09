@@ -4,9 +4,10 @@ import LogoutBtn from './LogoutBtn';
 type Props = {
     isLoggedIn: boolean;
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+    setUserName: React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Navbar({ isLoggedIn, setLoggedIn }: Props) {
+function Navbar({ isLoggedIn, setLoggedIn, setUserName }: Props) {
     return (
         <>
             <Link to={'/'}>
@@ -14,7 +15,12 @@ function Navbar({ isLoggedIn, setLoggedIn }: Props) {
                     buguetter
                 </h1>
             </Link>
-            {isLoggedIn && <LogoutBtn setLoggedIn={setLoggedIn} />}
+            {isLoggedIn && (
+                <LogoutBtn
+                    setUserName={setUserName}
+                    setLoggedIn={setLoggedIn}
+                />
+            )}
         </>
     );
 }

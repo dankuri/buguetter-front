@@ -5,16 +5,19 @@ import { errors } from '../errors';
 
 type Props = {
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+    setUserName: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export default function LogoutBtn({ setLoggedIn }: Props) {
+export default function LogoutBtn({ setLoggedIn, setUserName }: Props) {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const logout = async () => {
         const response = await apiLogoutCatching();
-        if (response == 'success') setLoggedIn(false);
-        else if (
+        if (response == 'success') {
+            setLoggedIn(false);
+            setUserName('');
+        } else if (
             response == errors[8] ||
             response == errors[9] ||
             response == errors[10]
