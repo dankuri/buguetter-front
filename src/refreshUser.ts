@@ -9,7 +9,6 @@ const getUser = async () => {
         credentials: 'include'
     });
     const data = await res.json();
-    console.log(data);
     if (data.name) return data.name;
     else return false;
 };
