@@ -1,28 +1,13 @@
 import { catchNull } from './catchNull';
-import { errors, statusErrorHandler } from './errors';
+import { statusErrorHandler } from './errors';
+import { apiFetchCookie, apiFetchData } from './apiFetch';
 
 const apiLogin = async (loginData: { login: string; password: string }) => {
-    const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(loginData)
-    });
-    const { msg, error }: ApiResponse = await res.json();
-    return statusErrorHandler({ msg, error });
+    return apiFetchData('/api/login', 'POST', loginData);
 };
 
 const apiLogout = async () => {
-    const res = await fetch('/api/logout', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-    });
-    const { msg, error }: ApiResponse = await res.json();
-    return statusErrorHandler({ msg, error });
+    return apiFetchCookie('/api/logout', 'DELETE');
 };
 
 const apiRegister = async (registerData: {
@@ -30,15 +15,7 @@ const apiRegister = async (registerData: {
     login: string;
     password: string;
 }) => {
-    const res = await fetch(`/api/register`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(registerData)
-    });
-    const { msg, error }: ApiResponse = await res.json();
-    return statusErrorHandler({ msg, error });
+    return apiFetchData('/api/register', 'POST', registerData);
 };
 
 export const apiLoginCatching = catchNull(apiLogin);
