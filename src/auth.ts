@@ -1,15 +1,15 @@
 import { catchNull } from './catchNull';
 import { apiFetchCookie, apiFetchData } from './apiFetch';
 
-const apiLogin = async (loginData: { login: string; password: string }) => {
+const apiLogin = (loginData: { login: string; password: string }) => {
     return apiFetchData('/api/login', 'POST', loginData);
 };
 
-const apiLogout = async () => {
+const apiLogout = () => {
     return apiFetchCookie('/api/logout', 'DELETE');
 };
 
-const apiRegister = async (registerData: {
+const apiRegister = (registerData: {
     name: string;
     login: string;
     password: string;
