@@ -1,5 +1,4 @@
 import { catchNull } from './catchNull';
-import { statusErrorHandler } from './errors';
 import { apiFetchCookie, apiFetchData } from './apiFetch';
 
 const apiLogin = async (loginData: { login: string; password: string }) => {
