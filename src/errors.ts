@@ -4,11 +4,16 @@ export const errors: { [key: number]: string } = {
     3: 'wrong password',
     4: 'this login is already taken',
     5: 'this name is already taken',
-    6: 'db connection error',
-    7: 'no text in post',
-    8: 'no refresh and/or access token',
-    9: 'token modified elsewhere',
-    10: 'token revoked'
+    6: 'no text in post',
+    7: 'no refresh and/or access token',
+    8: 'token modified elsewhere',
+    9: 'token revoked',
+    10: 'no tag in request body',
+    11: 'no reaction in request body',
+    12: 'adding post failed',
+    13: 'db connection failed',
+    14: 'likes and/or posts not found',
+    15: 'no user with this name'
 };
 
 export const statusErrorHandler = ({ msg, error }: ApiResponse) => {
