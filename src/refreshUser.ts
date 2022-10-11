@@ -2,7 +2,7 @@ import { catchNull } from './catchNull';
 
 const getUser = async () => {
     const res = await fetch(`/api/get_user_data`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         },
