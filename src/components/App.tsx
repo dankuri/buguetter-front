@@ -34,9 +34,9 @@ export default function App() {
     useEffect(() => void asyncEffect(), [isLoggedIn, isFailed])
 
     return (
-        <>
+        <div className="App min-h-screen flex flex-col">
             {!isLoading ? (
-                <div className="App min-h-screen flex flex-col">
+                <>
                     <Navbar
                         userName={userName}
                         setUserName={setUserName}
@@ -83,12 +83,12 @@ export default function App() {
                             }
                         />
                     </Routes>
-                </div>
+                </>
             ) : !isFailed ? (
                 <LoadingScreen />
             ) : (
                 <ErrorScreen />
             )}
-        </>
+        </div>
     )
 }

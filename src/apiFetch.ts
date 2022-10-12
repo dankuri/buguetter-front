@@ -4,7 +4,8 @@ export const apiFetchSendCookie = async (url: string, method: string) => {
     const res = await fetch(url, {
         method: method,
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Credentials': 'true'
         },
         credentials: 'include'
     })
@@ -12,7 +13,7 @@ export const apiFetchSendCookie = async (url: string, method: string) => {
     // TODO: remove this log when tested
     if (msg == 'new_token') console.log('refreshed token')
     msg == 'new_token'
-        ? apiFetchSendCookie(url, method)
+        ? await apiFetchSendCookie(url, method)
         : statusErrorHandler({ msg, error })
     return statusErrorHandler({ msg, error })
 }

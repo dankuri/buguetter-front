@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import LoadingScreen from './LoadingScreen'
 import Post from './Post'
 
 type Props = {
@@ -11,6 +12,7 @@ export default function Profile({ current, name }: Props) {
     // const [posts, setPosts] = useState([]);
     const followers = 1337
     const following = 228
+    const [isLoading, setLoading] = useState(true)
 
     const editProfile = () => {
         console.log('edit profile click')
@@ -20,14 +22,22 @@ export default function Profile({ current, name }: Props) {
         console.log('follow')
     }
 
+    setTimeout(() => setLoading(false), 2000)
+
     return (
         <div className="m-auto border-white border-2 rounded-2xl max-w-screen-md text-center">
             <header className="flex items-center justify-center">
-                <img
-                    src={`https://joeschmoe.io/api/v1/${name}`}
-                    alt="ur profile pic"
-                    className="w-32 h-32 mr-16 rounded-full bg-gray-800"
-                />
+                <div className="w-32 h-32">
+                    {isLoading ? (
+                        <LoadingScreen />
+                    ) : (
+                        <img
+                            src={`https://joeschmoe.io/api/v1/${name}`}
+                            alt="ur profile pic"
+                            className="w-32 h-32 mr-16 rounded-full bg-gray-800"
+                        />
+                    )}
+                </div>
                 <h1>{name}</h1>
             </header>
             <div className="profile_panel border-gray-500 border-2 flex flex-col items-center justify-center">
