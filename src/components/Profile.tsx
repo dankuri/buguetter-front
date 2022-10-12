@@ -12,6 +12,7 @@ export default function Profile({ current, name }: Props) {
     // const [posts, setPosts] = useState([]);
     const followers = 1337
     const following = 228
+    const dateJoined = '24/12/22'
     const [isLoading, setLoading] = useState(true)
 
     const editProfile = () => {
@@ -21,39 +22,42 @@ export default function Profile({ current, name }: Props) {
     const follow = () => {
         console.log('follow')
     }
-
-    setTimeout(() => setLoading(false), 2000)
+    // TODO: extract imageLoad and avatar logic to component
+    const imageLoad = () => {
+        document.querySelector('#avatar')?.classList.remove('hidden')
+        setLoading(false)
+    }
 
     return (
-        <div className="m-auto border-white border-2 rounded-2xl max-w-screen-md text-center">
+        <div className="m-auto border-white border-2 rounded-2xl md:w-[768px] sm:w-[640px] text-center flex flex-col grow">
             <header className="flex items-center justify-center">
                 <div className="w-32 h-32">
-                    {isLoading ? (
-                        <LoadingScreen />
-                    ) : (
-                        <img
-                            src={`https://joeschmoe.io/api/v1/${name}`}
-                            alt="ur profile pic"
-                            className="w-32 h-32 mr-16 rounded-full bg-gray-800"
-                        />
-                    )}
+                    {isLoading && <LoadingScreen />}
+                    <img
+                        src={`https://joeschmoe.io/api/v1/${name}`}
+                        alt="ur profile pic"
+                        id="avatar"
+                        className="w-32 h-32 mr-16 rounded-full bg-gray-800 hidden"
+                        onLoad={imageLoad}
+                    />
                 </div>
                 <h1>{name}</h1>
             </header>
-            <div className="profile_panel border-gray-500 border-2 flex flex-col items-center justify-center">
+            <div className="profile_panel border-gray-500 border-2 flex flex-col items-start py-2">
                 {current ? (
-                    <button className="btn" onClick={editProfile}>
+                    <button className="btn ml-4 mb-2" onClick={editProfile}>
                         edit profile
                     </button>
                 ) : (
-                    <button className="btn" onClick={follow}>
+                    <button className="btn ml-4" onClick={follow}>
                         follow
                     </button>
                 )}
-                <div className="profile_panel_numbers">
+                <div className="profile_panel_numbers flex justify-between px-4 w-full">
                     <span>
                         {followers} followers, {following} following
                     </span>
+                    <span>joined {dateJoined}</span>
                 </div>
             </div>
             <div className="profile_panel_select grid grid-cols-3 space-x-7">
