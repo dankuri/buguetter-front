@@ -51,7 +51,7 @@ export default function RegisterForm({ setUserName, setLoggedIn }: Props) {
     }
 
     return (
-        <div className="h-screen flex flex-col justify-center items-center">
+        <div className="flex flex-col grow justify-center items-center">
             {error && <h2>{error}</h2>}
             <form id="auth-form" action="#" onSubmit={sendRegister}>
                 <Input
