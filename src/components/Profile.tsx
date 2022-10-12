@@ -16,6 +16,10 @@ export default function Profile({ current, name }: Props) {
         console.log('edit profile click')
     }
 
+    const follow = () => {
+        console.log('follow')
+    }
+
     return (
         <div className="m-auto border-white border-2 rounded-2xl max-w-screen-md text-center">
             <header className="flex items-center justify-center">
@@ -27,9 +31,15 @@ export default function Profile({ current, name }: Props) {
                 <h1>{name}</h1>
             </header>
             <div className="profile_panel border-gray-500 border-2 flex flex-col items-center justify-center">
-                <button className="btn" onClick={editProfile}>
-                    edit profile
-                </button>
+                {current ? (
+                    <button className="btn" onClick={editProfile}>
+                        edit profile
+                    </button>
+                ) : (
+                    <button className="btn" onClick={follow}>
+                        follow
+                    </button>
+                )}
                 <div className="profile_panel_numbers">
                     <span>
                         {followers} followers, {following} following
