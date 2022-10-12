@@ -1,12 +1,12 @@
 import { catchNull } from './catchNull';
-import { apiFetchCookie, apiFetchData } from './apiFetch';
+import { apiFetchSendCookie, apiFetchSendData } from './apiFetch';
 
 const apiLogin = (loginData: { login: string; password: string }) => {
-    return apiFetchData('/api/login', 'POST', loginData);
+    return apiFetchSendData('/api/login', 'POST', loginData);
 };
 
 const apiLogout = () => {
-    return apiFetchCookie('/api/logout', 'DELETE');
+    return apiFetchSendCookie('/api/logout', 'DELETE');
 };
 
 const apiRegister = (registerData: {
@@ -14,7 +14,7 @@ const apiRegister = (registerData: {
     login: string;
     password: string;
 }) => {
-    return apiFetchData('/api/register', 'POST', registerData);
+    return apiFetchSendData('/api/register', 'POST', registerData);
 };
 
 export const apiLoginCatching = catchNull(apiLogin);
