@@ -36,8 +36,9 @@ export default function App() {
     return (
         <>
             {!isLoading ? (
-                <div className="App">
+                <div className="App min-h-screen flex flex-col">
                     <Navbar
+                        userName={userName}
                         setUserName={setUserName}
                         isLoggedIn={isLoggedIn}
                         setLoggedIn={setLoggedIn}
@@ -50,7 +51,7 @@ export default function App() {
                                     <Profile current={true} name={userName} />
                                 ) : (
                                     <>
-                                        <h2 className="h-screen flex flex-col text-3xl items-center justify-center">
+                                        <h2 className="flex flex-col grow text-3xl items-center justify-center">
                                             ur not logged in, go to
                                             <Link
                                                 to={'/login'}
