@@ -1,36 +1,37 @@
-import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import { Routes, Route, useNavigate, Link } from 'react-router-dom'
 
-import useServerCheck from '../hooks/useServerCheck.js';
-import { refreshUser } from '../refreshUser.js';
+import useServerCheck from '../hooks/useServerCheck.jsx'
+import { getUserCatching } from '../getUser.js'
 
-import ErrorScreen from './ErrorScreen.jsx';
-import LoadingScreen from './LoadingScreen.jsx';
-import LoginForm from './LoginForm.jsx';
-import RegisterForm from './RegisterForm.jsx';
-import Navbar from './Navbar';
+import ErrorScreen from './ErrorScreen.jsx'
+import LoadingScreen from './LoadingScreen.jsx'
+import LoginForm from './LoginForm.jsx'
+import RegisterForm from './RegisterForm.jsx'
+import Navbar from './Navbar.jsx'
+import Profile from './Profile.jsx'
 
 export default function App() {
-    const [isLoading, setLoading] = useState(true);
-    const [isLoggedIn, setLoggedIn] = useState(false);
-    const [userName, setUserName] = useState('');
-    const isFailed = useServerCheck();
-    const navigate = useNavigate();
+    const [isLoading, setLoading] = useState(true)
+    const [isLoggedIn, setLoggedIn] = useState(false)
+    const [userName, setUserName] = useState('')
+    const isFailed = useServerCheck()
+    const navigate = useNavigate()
 
     const asyncEffect = async () => {
         if (!isFailed) {
-            const name = await refreshUser();
-            if (name) {
-                setUserName(name);
-                setLoggedIn(true);
+            const userData = await getUserCatching()
+            if (userData.name) {
+                setUserName(userData.name)
+                setLoggedIn(true)
             } else {
-                navigate('/login');
+                navigate('/login')
             }
-            setLoading(false);
+            setLoading(false)
         }
-    };
+    }
 
-    useEffect(() => void asyncEffect(), [isLoggedIn, isFailed]);
+    useEffect(() => void asyncEffect(), [isLoggedIn, isFailed])
 
     return (
         <>
@@ -46,9 +47,7 @@ export default function App() {
                             path="/"
                             element={
                                 isLoggedIn ? (
-                                    <h2 className="h-screen flex text-3xl items-center justify-center">
-                                        hello, {userName}
-                                    </h2>
+                                    <Profile current={true} name={userName} />
                                 ) : (
                                     <>
                                         <h2 className="h-screen flex flex-col text-3xl items-center justify-center">
@@ -90,5 +89,5 @@ export default function App() {
                 <ErrorScreen />
             )}
         </>
-    );
+    )
 }

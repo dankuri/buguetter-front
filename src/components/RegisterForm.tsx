@@ -1,54 +1,54 @@
-import { FormEventHandler, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { apiRegisterCatching, apiLoginCatching } from '../auth';
-import { refreshUser } from '../refreshUser';
-import Input from './Input';
+import { FormEventHandler, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { apiRegisterCatching, apiLoginCatching } from '../auth'
+import { getUserCatching } from '../getUser'
+import Input from './Input'
 
 type Props = {
-    setUserName: React.Dispatch<React.SetStateAction<string>>;
-    setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-};
+    setUserName: React.Dispatch<React.SetStateAction<string>>
+    setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 export default function RegisterForm({ setUserName, setLoggedIn }: Props) {
-    const navigate = useNavigate();
-    const [name, setName] = useState('');
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const navigate = useNavigate()
+    const [name, setName] = useState('')
+    const [login, setLogin] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
 
     const sendRegister: FormEventHandler<HTMLFormElement> = async ev => {
-        ev.preventDefault();
-        if (name === '') setError('empty name!');
-        else if (login === '') setError('empty login!');
-        else if (password === '') setError('empty password!');
+        ev.preventDefault()
+        if (name === '') setError('empty name!')
+        else if (login === '') setError('empty login!')
+        else if (password === '') setError('empty password!')
         else {
             const registerResponse = await apiRegisterCatching({
                 name,
                 login,
                 password
-            });
+            })
             if (registerResponse === 'success') {
                 const loginResponse = await apiLoginCatching({
                     login,
                     password
-                });
+                })
                 if (loginResponse == 'success') {
-                    const name = await refreshUser();
-                    if (name) {
-                        setUserName(name);
-                        setLoggedIn(true);
-                        navigate('/');
+                    const data = await getUserCatching()
+                    if (data.name) {
+                        setUserName(data.name)
+                        setLoggedIn(true)
+                        navigate('/')
                     } else {
-                        setError('cannot get name');
+                        setError('cannot get name')
                     }
                 } else {
-                    setError('bad login');
+                    setError('bad login')
                 }
             } else if (typeof registerResponse == 'string') {
-                setError(registerResponse);
+                setError(registerResponse)
             }
         }
-    };
+    }
 
     return (
         <div className="h-screen flex flex-col justify-center items-center">
@@ -83,5 +83,5 @@ export default function RegisterForm({ setUserName, setLoggedIn }: Props) {
                 </div>
             </form>
         </div>
-    );
+    )
 }
