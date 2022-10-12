@@ -14,16 +14,16 @@ export const errors: { [key: number]: string } = {
     13: 'db connection failed',
     14: 'likes and/or posts not found',
     15: 'no user with this name'
-};
+}
 
-export const statusErrorHandler = ({ msg, error }: ApiResponse) => {
+export const statusErrorHandler = ({ msg, error }: ApiStatusResponse) => {
     if (msg == 'success') {
-        return 'success';
+        return 'success'
     } else if (error in errors) {
-        return errors[error];
+        return errors[error]
     } else if (error) {
-        return 'unknown error';
+        return 'unknown error'
     } else {
-        return 'invalid response';
+        return 'invalid response'
     }
-};
+}
