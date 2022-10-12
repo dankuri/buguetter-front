@@ -1,9 +1,9 @@
 type Props = {
-    value: string;
-    placeholder: string;
-    type: string;
-    onChange: (value: string) => void;
-};
+    value: string
+    placeholder: string
+    type: string
+    onChange: (value: string) => void
+}
 
 export default function Input({ value, placeholder, type, onChange }: Props) {
     return (
@@ -14,5 +14,5 @@ export default function Input({ value, placeholder, type, onChange }: Props) {
             value={value}
             onChange={e => onChange(e.target.value)}
         />
-    );
+    )
 }
