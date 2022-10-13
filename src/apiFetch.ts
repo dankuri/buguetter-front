@@ -1,13 +1,12 @@
 import { statusErrorHandler } from './errors'
-
+// TODO: add abortController
 export const apiFetchSendCookie = async (url: string, method: string) => {
     const res = await fetch(url, {
         method: method,
         headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Credentials': 'true'
+            'Content-Type': 'application/json'
         },
-        credentials: 'include'
+        credentials: 'same-origin'
     })
     const { msg, error }: ApiStatusResponse = await res.json()
     // TODO: remove this log when tested
@@ -28,7 +27,7 @@ export const apiFetchSendData = async (
         headers: {
             'Content-Type': 'application/json'
         },
-        credentials: 'include',
+        credentials: 'same-origin',
         body: JSON.stringify(data)
     })
     const { msg, error }: ApiStatusResponse = await res.json()
