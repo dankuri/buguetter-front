@@ -14,7 +14,7 @@ const getUser = async () => {
     console.log(data)
     // TODO: extract this kind of fetch in apiFetch
     if (data.msg == 'new_token') {
-        console.log('refreshed token')
+        console.log('refreshed token in getUser')
         const newRes = await fetch(`/api/get_user_data`, {
             method: 'GET',
             headers: {
