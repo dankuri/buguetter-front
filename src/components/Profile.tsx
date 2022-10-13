@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { apiFetchGetData } from '../apiFetch'
 import Avatar from './Avatar'
 import LoadingScreen from './LoadingScreen'
 import Post from './Post'
@@ -6,13 +7,21 @@ import Post from './Post'
 type Props = {
     current: boolean
     name: string
+    followers: number
+    following: number
+    userId: number
 }
 
-export default function Profile({ current, name }: Props) {
+export default function Profile({
+    current,
+    name,
+    followers,
+    following,
+    userId
+}: Props) {
     const [section, setSection] = useState('posts')
-    // const [posts, setPosts] = useState([]);
-    const followers = 1337
-    const following = 228
+    const [posts, setPosts] = useState({})
+    const [isLoading, setLoading] = useState(false)
     const dateJoined = '24/12/22'
 
     const editProfile = () => {
@@ -22,6 +31,21 @@ export default function Profile({ current, name }: Props) {
     const follow = () => {
         console.log('follow')
     }
+
+    useEffect(() => {
+        console.log('Profile useEffect')
+        setLoading(true)
+        const getPosts = async () => {
+            const data = await apiFetchGetData('/api/get_user_post', 'POST', {
+                user_id: userId
+            })
+            setPosts(data)
+            setLoading(false)
+            console.log(data)
+        }
+
+        getPosts()
+    }, [userId])
 
     return (
         <div className="m-auto flex grow flex-col rounded-2xl border-2 border-white text-center sm:w-[640px] md:w-[768px]">
@@ -59,48 +83,30 @@ export default function Profile({ current, name }: Props) {
             </div>
             {section == 'posts' ? (
                 <div className="posts">
-                    <Post
-                        text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
-                        reactions={{ '😨': 420, '🔥': 120 }}
-                        date={1665491590000}
-                    />
-                    <Post
-                        text="henlo world"
-                        reactions={{ '🍑': 120, '🔥': 12 }}
-                        date={1040733190000}
-                    />
-                    <Post
-                        text="bruh moment"
-                        reactions={{ '😭': 1488, '🍑': 19, '🔥': 2 }}
-                        date={1000211590000}
-                    />
-                    <Post
-                        text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
-                        reactions={{ '😨': 420, '🔥': 120 }}
-                        date={1665491590000}
-                    />
-                    <Post
-                        text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
-                        reactions={{ '😨': 420, '🔥': 120 }}
-                        date={1665491590000}
-                    />
-                    <Post
-                        text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
-                        reactions={{ '😨': 420, '🔥': 120 }}
-                        date={1665491590000}
-                    />
+                    {!isLoading ? (
+                        Object.keys(posts).map(key => (
+                            <Post
+                                text={posts[key].text}
+                                date={posts[key].data * 1000}
+                                reactionsCount={posts[key].reactions}
+                                key={key}
+                            />
+                        ))
+                    ) : (
+                        <LoadingScreen />
+                    )}
                 </div>
             ) : section == 'likes' ? (
                 <div className="likes">
                     <Post
                         text="like me pls"
-                        reactions={{ '😭': 1488, '🍑': 19, '🔥': 2 }}
+                        reactionsCount={{ '😭': 1488, '🍑': 19, '🔥': 2 }}
                         date={Date.now()}
                         user={'anton'}
                     />
                     <Post
                         text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
-                        reactions={{ '😨': 420, '🔥': 120 }}
+                        reactionsCount={{ '😨': 420, '🔥': 120 }}
                         date={1665491590000}
                         user={'oleg'}
                     />
@@ -109,19 +115,19 @@ export default function Profile({ current, name }: Props) {
                 <div className="comments">
                     <Post
                         text="wow"
-                        reactions={{ '🔥': 8324 }}
+                        reactionsCount={{ '🔥': 8324 }}
                         date={Date.now()}
                         user={'danya'}
                     />
                     <Post
                         text="amazing"
-                        reactions={{ '🔥': 9824 }}
+                        reactionsCount={{ '🔥': 9824 }}
                         date={Date.now()}
                         user={'danya'}
                     />
                     <Post
                         text="this will be dead..."
-                        reactions={{ '😭': 19123 }}
+                        reactionsCount={{ '😭': 19123 }}
                         date={Date.now()}
                         user={'valera'}
                     />

@@ -11,18 +11,32 @@ import RegisterForm from './RegisterForm.jsx'
 import Navbar from './Navbar.jsx'
 import Profile from './Profile.jsx'
 
+type UserData = {
+    name: string
+    user_id: number
+    follow: number
+    following: number
+}
+
 export default function App() {
     const [isLoading, setLoading] = useState(true)
     const [isLoggedIn, setLoggedIn] = useState(false)
     const [userName, setUserName] = useState('')
+    const [userId, setUserId] = useState(-1)
+    const [followers, setFollowers] = useState(0)
+    const [following, setFollowing] = useState(0)
     const isFailed = useServerCheck()
     const navigate = useNavigate()
     // FIXME: fires 2 times instead 1 on prod (3 on dev even)
     const asyncEffect = async () => {
         if (!isFailed) {
-            const userData = await getUserCatching()
-            if (userData.name) {
-                setUserName(userData.name)
+            const userData: UserData = await getUserCatching()
+            console.log(userData)
+            if (userData['name']) {
+                setUserName(userData['name'])
+                setUserId(userData['user_id'])
+                setFollowers(userData['follow'])
+                setFollowing(userData['following'])
                 setLoggedIn(true)
             } else {
                 navigate('/login')
@@ -48,7 +62,13 @@ export default function App() {
                             path="/"
                             element={
                                 isLoggedIn ? (
-                                    <Profile current={true} name={userName} />
+                                    <Profile
+                                        current={true}
+                                        name={userName}
+                                        followers={followers}
+                                        following={following}
+                                        userId={userId}
+                                    />
                                 ) : (
                                     <>
                                         <h2 className="flex grow flex-col items-center justify-center text-3xl">

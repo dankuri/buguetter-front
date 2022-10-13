@@ -2,9 +2,16 @@ import Avatar from './Avatar'
 
 type Props = {
     text: string
-    reactions: { [key: string]: number }
+    reactionsCount: { [key: string]: number }
     date: number
     user?: string
+}
+
+const reactions = {
+    cool: '😎',
+    nice: '👍',
+    angry: '😠',
+    shit: '💩'
 }
 
 const formatDate = (date: number) => {
@@ -32,7 +39,7 @@ const formatDate = (date: number) => {
 //     });
 // };
 
-export default function Post({ text, reactions, date, user }: Props) {
+export default function Post({ text, reactionsCount, date, user }: Props) {
     return (
         <div className="post border-b-2 border-green-400 p-4 text-2xl last:border-0">
             {user && (
@@ -43,8 +50,23 @@ export default function Post({ text, reactions, date, user }: Props) {
             )}
             <span className="block pb-2 text-left">{text}</span>
             <footer className="flex items-center justify-between">
-                <div className="reactions inline-block">
-                    {Object.entries(reactions)}
+                <div className="reactions flex justify-between">
+                    <button className="btn">
+                        {reactions.cool}
+                        {reactionsCount.cool}
+                    </button>
+                    <button className="btn">
+                        {reactions.nice}
+                        {reactionsCount.nice}
+                    </button>
+                    <button className="btn">
+                        {reactions.angry}
+                        {reactionsCount.angry}
+                    </button>
+                    <button className="btn">
+                        {reactions.shit}
+                        {reactionsCount.shit}
+                    </button>
                 </div>
                 <div className="post_date inline-block">{formatDate(date)}</div>
             </footer>
