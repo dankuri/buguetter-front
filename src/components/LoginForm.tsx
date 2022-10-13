@@ -37,7 +37,7 @@ export default function LoginForm({ setLoggedIn, setUserName }: Props) {
     }
 
     return (
-        <div className="flex flex-col grow justify-center items-center">
+        <div className="flex grow flex-col items-center justify-center">
             {error && <h2>{error}</h2>}
             <form id="auth-form" action="#" onSubmit={sendLogin}>
                 <Input

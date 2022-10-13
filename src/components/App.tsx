@@ -17,7 +17,7 @@ export default function App() {
     const [userName, setUserName] = useState('')
     const isFailed = useServerCheck()
     const navigate = useNavigate()
-
+    // FIXME: fires 2 times instead 1 on prod (3 on dev even)
     const asyncEffect = async () => {
         if (!isFailed) {
             const userData = await getUserCatching()
@@ -34,7 +34,7 @@ export default function App() {
     useEffect(() => void asyncEffect(), [isLoggedIn, isFailed])
 
     return (
-        <div className="App min-h-screen flex flex-col">
+        <div className="App flex min-h-screen flex-col">
             {!isLoading ? (
                 <>
                     <Navbar
@@ -51,7 +51,7 @@ export default function App() {
                                     <Profile current={true} name={userName} />
                                 ) : (
                                     <>
-                                        <h2 className="flex flex-col grow text-3xl items-center justify-center">
+                                        <h2 className="flex grow flex-col items-center justify-center text-3xl">
                                             ur not logged in, go to
                                             <Link
                                                 to={'/login'}

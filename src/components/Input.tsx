@@ -9,7 +9,7 @@ export default function Input({ value, placeholder, type, onChange }: Props) {
     return (
         <input
             type={type}
-            className="block m-4 p-2 text-2xl rounded-lg bg-slate-700"
+            className="m-4 block rounded-lg bg-slate-700 p-2 text-2xl"
             placeholder={placeholder}
             value={value}
             onChange={e => onChange(e.target.value)}
