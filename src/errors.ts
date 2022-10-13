@@ -13,7 +13,8 @@ export const errors: { [key: number]: string } = {
     12: 'adding post failed',
     13: 'db connection failed',
     14: 'likes and/or posts not found',
-    15: 'no user with this name'
+    15: 'no user with this name',
+    16: 'refresh token expired'
 }
 
 export const statusErrorHandler = ({ msg, error }: ApiStatusResponse) => {
