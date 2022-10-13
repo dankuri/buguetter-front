@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Avatar from './Avatar'
 import LoadingScreen from './LoadingScreen'
 import Post from './Post'
 
@@ -13,7 +14,6 @@ export default function Profile({ current, name }: Props) {
     const followers = 1337
     const following = 228
     const dateJoined = '24/12/22'
-    const [isLoading, setLoading] = useState(true)
 
     const editProfile = () => {
         console.log('edit profile click')
@@ -22,45 +22,31 @@ export default function Profile({ current, name }: Props) {
     const follow = () => {
         console.log('follow')
     }
-    // TODO: extract imageLoad and avatar logic to component
-    const imageLoad = () => {
-        document.querySelector('#avatar')?.classList.remove('hidden')
-        setLoading(false)
-    }
 
     return (
-        <div className="m-auto border-white border-2 rounded-2xl md:w-[768px] sm:w-[640px] text-center flex flex-col grow">
-            <header className="flex items-center justify-center">
-                <div className="w-32 h-32">
-                    {isLoading && <LoadingScreen />}
-                    <img
-                        src={`https://joeschmoe.io/api/v1/${name}`}
-                        alt="ur profile pic"
-                        id="avatar"
-                        className="w-32 h-32 mr-16 rounded-full bg-gray-800 hidden"
-                        onLoad={imageLoad}
-                    />
-                </div>
+        <div className="m-auto flex grow flex-col rounded-2xl border-2 border-white text-center sm:w-[640px] md:w-[768px]">
+            <header className="flex items-center justify-around px-48">
+                <Avatar name={name} size={128} />
                 <h1>{name}</h1>
             </header>
-            <div className="profile_panel border-gray-500 border-2 flex flex-col items-start py-2">
+            <div className="profile_panel flex flex-col items-start border-2 border-gray-500 p-4 text-2xl">
                 {current ? (
-                    <button className="btn ml-4 mb-2" onClick={editProfile}>
+                    <button className="btn mb-4" onClick={editProfile}>
                         edit profile
                     </button>
                 ) : (
-                    <button className="btn ml-4" onClick={follow}>
+                    <button className="btn mb-4" onClick={follow}>
                         follow
                     </button>
                 )}
-                <div className="profile_panel_numbers flex justify-between px-4 w-full">
+                <div className="profile_panel_numbers flex w-full justify-between">
                     <span>
                         {followers} followers, {following} following
                     </span>
                     <span>joined {dateJoined}</span>
                 </div>
             </div>
-            <div className="profile_panel_select grid grid-cols-3 space-x-7">
+            <div className="profile_panel_select grid grid-cols-3 space-x-7 border-b-2 text-2xl">
                 <button className="btn" onClick={() => setSection('posts')}>
                     posts
                 </button>
@@ -110,13 +96,35 @@ export default function Profile({ current, name }: Props) {
                         text="like me pls"
                         reactions={{ '😭': 1488, '🍑': 19, '🔥': 2 }}
                         date={Date.now()}
-                        user={name}
+                        user={'anton'}
+                    />
+                    <Post
+                        text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
+                        reactions={{ '😨': 420, '🔥': 120 }}
+                        date={1665491590000}
+                        user={'oleg'}
                     />
                 </div>
             ) : section == 'comments' ? (
                 <div className="comments">
-                    <p>wow</p>
-                    <p>amazing</p>
+                    <Post
+                        text="wow"
+                        reactions={{ '🔥': 8324 }}
+                        date={Date.now()}
+                        user={'danya'}
+                    />
+                    <Post
+                        text="amazing"
+                        reactions={{ '🔥': 9824 }}
+                        date={Date.now()}
+                        user={'danya'}
+                    />
+                    <Post
+                        text="this will be dead..."
+                        reactions={{ '😭': 19123 }}
+                        date={Date.now()}
+                        user={'valera'}
+                    />
                 </div>
             ) : (
                 <div className="error">wtf</div>

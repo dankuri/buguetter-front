@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import Avatar from './Avatar'
 
 type Props = {
     text: string
@@ -34,10 +34,15 @@ const formatDate = (date: number) => {
 
 export default function Post({ text, reactions, date, user }: Props) {
     return (
-        <div className="post border-2 border-green-400 rounded-2xl">
-            {user && <span>{user}</span>}
-            <span className="block text-left p-4 pb-1">{text}</span>
-            <footer className="m-2 px-2 flex justify-between items-center">
+        <div className="post border-b-2 border-green-400 p-4 text-2xl last:border-0">
+            {user && (
+                <div className="flex items-center pb-2">
+                    <Avatar size={64} name={user} />
+                    <span className="pl-4">{user}</span>
+                </div>
+            )}
+            <span className="block pb-2 text-left">{text}</span>
+            <footer className="flex items-center justify-between">
                 <div className="reactions inline-block">
                     {Object.entries(reactions)}
                 </div>
