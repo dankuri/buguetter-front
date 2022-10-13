@@ -1,4 +1,4 @@
-import loading from '../assets/loading.svg'
+import loading from '/loading.svg'
 
 export default function LoadingScreen() {
     return (
