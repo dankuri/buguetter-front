@@ -9,9 +9,10 @@ const getUser = async () => {
         },
         credentials: 'same-origin'
     })
+    console.log(res)
     const data = await res.json()
     console.log(data)
-    if (!data.error) return data
+    // TODO: extract this kind of fetch in apiFetch
     if (data.msg == 'new_token') {
         console.log('refreshed token')
         const newRes = await fetch(`/api/get_user_data`, {
@@ -23,7 +24,8 @@ const getUser = async () => {
         })
         const newData = await newRes.json()
         return newData
-    } else return false
+    } else if (!data.error) return data
+    else return false
 }
 
 export const getUserCatching = catchNull(getUser)
