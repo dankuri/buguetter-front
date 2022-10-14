@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { apiFetchGetData } from '../apiFetch'
 import Avatar from './Avatar'
 import LoadingScreen from './LoadingScreen'
 import Post from './Post'
@@ -12,6 +11,20 @@ type Props = {
     userId: number
 }
 
+type Posts = {
+    [id: number]: {
+        data: number
+        reactions: {
+            angry: number
+            cool: number
+            nice: number
+            shit: number
+            user_reaction: 'angry' | 'cool' | 'nice' | 'shit' | null
+        }
+        text: string
+    }
+}
+
 export default function Profile({
     current,
     name,
@@ -20,7 +33,7 @@ export default function Profile({
     userId
 }: Props) {
     const [section, setSection] = useState('posts')
-    const [posts, setPosts] = useState({})
+    const [posts, setPosts] = useState<Posts>({})
     const [isLoading, setLoading] = useState(false)
     const dateJoined = '24/12/22'
 
@@ -31,17 +44,31 @@ export default function Profile({
     const follow = () => {
         console.log('follow')
     }
-
+    // TODO: add sections to deps and different routes for them
     useEffect(() => {
         console.log('Profile useEffect')
         setLoading(true)
         const getPosts = async () => {
-            const data = await apiFetchGetData('/api/get_user_post', 'POST', {
-                user_id: userId
-            })
-            setPosts(data)
-            setLoading(false)
-            console.log(data)
+            try {
+                const res = await fetch('/api/get_user_post', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ user_id: userId })
+                })
+                const data = await res.json()
+                if (data.msg == 'new_token') getPosts()
+                else {
+                    setPosts(data)
+                    console.log(data)
+                    setLoading(false)
+                }
+            } catch (error) {
+                console.error(error)
+                setLoading(false)
+            }
         }
 
         getPosts()
@@ -86,10 +113,11 @@ export default function Profile({
                     {!isLoading ? (
                         Object.keys(posts).map(key => (
                             <Post
-                                text={posts[key].text}
-                                date={posts[key].data * 1000}
-                                reactionsCount={posts[key].reactions}
-                                key={key}
+                                id={parseInt(key)}
+                                text={posts[parseInt(key)].text}
+                                date={posts[parseInt(key)].data * 1000}
+                                reactionsCount={posts[parseInt(key)].reactions}
+                                key={parseInt(key)}
                             />
                         ))
                     ) : (
@@ -98,39 +126,76 @@ export default function Profile({
                 </div>
             ) : section == 'likes' ? (
                 <div className="likes">
-                    <Post
+                    {/* <Post
+                        id={798324}
                         text="like me pls"
-                        reactionsCount={{ '😭': 1488, '🍑': 19, '🔥': 2 }}
+                        reactionsCount={{
+                            cool: 1488,
+                            nice: 19,
+                            angry: 2,
+                            shit: 0,
+                            user_reaction: 'cool'
+                        }}
                         date={Date.now()}
                         user={'anton'}
                     />
                     <Post
+                        id={798325}
                         text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
-                        reactionsCount={{ '😨': 420, '🔥': 120 }}
+                        reactionsCount={{
+                            cool: 322,
+                            nice: 135,
+                            angry: 3452,
+                            shit: 2345,
+                            user_reaction: 'nice'
+                        }}
                         date={1665491590000}
                         user={'oleg'}
-                    />
+                    /> */}
+                    likes will be here
                 </div>
             ) : section == 'comments' ? (
                 <div className="comments">
-                    <Post
+                    {/* <Post
+                        id={798326}
                         text="wow"
-                        reactionsCount={{ '🔥': 8324 }}
+                        reactionsCount={{
+                            cool: 2354,
+                            nice: 234,
+                            angry: 65,
+                            shit: 587,
+                            user_reaction: 'shit'
+                        }}
                         date={Date.now()}
                         user={'danya'}
                     />
                     <Post
+                        id={798327}
                         text="amazing"
-                        reactionsCount={{ '🔥': 9824 }}
+                        reactionsCount={{
+                            cool: 5867,
+                            nice: 98,
+                            angry: 40,
+                            shit: 0,
+                            user_reaction: 'cool'
+                        }}
                         date={Date.now()}
                         user={'danya'}
                     />
                     <Post
+                        id={798328}
                         text="this will be dead..."
-                        reactionsCount={{ '😭': 19123 }}
+                        reactionsCount={{
+                            cool: 32043,
+                            nice: 123,
+                            angry: 2030,
+                            shit: 1,
+                            user_reaction: 'angry'
+                        }}
                         date={Date.now()}
                         user={'valera'}
-                    />
+                    /> */}
+                    comments will be here
                 </div>
             ) : (
                 <div className="error">wtf</div>

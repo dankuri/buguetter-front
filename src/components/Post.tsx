@@ -1,8 +1,16 @@
+import { useEffect, useState } from 'react'
 import Avatar from './Avatar'
 
 type Props = {
+    id: number
     text: string
-    reactionsCount: { [key: string]: number }
+    reactionsCount: {
+        cool: number
+        nice: number
+        angry: number
+        shit: number
+        user_reaction: string
+    }
     date: number
     user?: string
 }
@@ -22,24 +30,28 @@ const formatDate = (date: number) => {
     const year = dateObject.getFullYear().toString().slice(2)
     return `${day}/${month}/${year}`
 }
-// TODO: reactions - select one reaction & increase it's count
-// const ReactionsBtns = (reactions: { [key: string]: number }) => {
-//     return Object.keys(reactions).map(key => {
-//         const [reaction, setReaction] = useState(reactions[key]);
 
-//         const increaseReactionCount = () => {
-//             setReaction(reactions[key] + 1);
-//         };
+export default function Post({ id, text, reactionsCount, date, user }: Props) {
+    const [reaction, setReaction] = useState(reactionsCount.user_reaction)
 
-//         return (
-//             <button className="btn" onClick={increaseReactionCount} key={key}>
-//                 {key}: {reaction}
-//             </button>
-//         );
-//     });
-// };
+    const sendReaction = async (reaction: string) => {
+        try {
+            const res = await fetch('/api/add_reaction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({ post_id: id, reactions: reaction })
+            })
+            const data = await res.json()
+            if (data.msg == 'new_token') sendReaction(reaction)
+            else console.log(data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
-export default function Post({ text, reactionsCount, date, user }: Props) {
     return (
         <div className="post border-b-2 border-green-400 p-4 text-2xl last:border-0">
             {user && (
@@ -50,8 +62,27 @@ export default function Post({ text, reactionsCount, date, user }: Props) {
             )}
             <span className="block pb-2 text-left">{text}</span>
             <footer className="flex items-center justify-between">
-                <div className="reactions flex justify-between">
-                    <button className="btn">
+                <div className="reactions">
+                    {Object.keys(reactionsCount).map(key => {
+                        if (key == 'user_reaction') return
+                        return (
+                            <button
+                                className={
+                                    reaction == key
+                                        ? 'btn text-green-500'
+                                        : 'btn'
+                                }
+                                onClick={() => {
+                                    setReaction(key)
+                                    sendReaction(key)
+                                }}
+                            >
+                                {reactions[key]}
+                                {reactionsCount[key]}
+                            </button>
+                        )
+                    })}
+                    {/* <button className="btn">
                         {reactions.cool}
                         {reactionsCount.cool}
                     </button>
@@ -66,7 +97,7 @@ export default function Post({ text, reactionsCount, date, user }: Props) {
                     <button className="btn">
                         {reactions.shit}
                         {reactionsCount.shit}
-                    </button>
+                    </button> */}
                 </div>
                 <div className="post_date inline-block">{formatDate(date)}</div>
             </footer>
