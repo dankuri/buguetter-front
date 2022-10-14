@@ -39,51 +39,23 @@ export const apiFetchSendData = async (
     return statusErrorHandler({ msg, error })
 }
 
-export const apiFetchGetData = async (
-    url: string,
-    method: string,
-    data?: { [key: string]: number | string }
-): Promise<{ [key: string]: number | string }> => {
-    const res = await fetch(url, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        credentials: 'same-origin',
-        body: JSON.stringify(data)
-    })
-    const returnData = await res.json()
-    if (returnData.msg == 'new_token') {
-        return apiFetchGetData(url, method, data)
-    } else if (!returnData.error) return returnData
-    const { msg, error } = returnData
-    return statusErrorHandler({ msg, error })
-}
-// FIXME: not working properly, returns invalid response
 // export const apiFetchGetData = async (
 //     url: string,
 //     method: string,
-//     data?: { [key: string]: string }
-// ) => {
+//     data?: { [key: string]: number | string }
+// ): Promise<{ [key: string]: number | string }> => {
 //     const res = await fetch(url, {
 //         method: method,
 //         headers: {
 //             'Content-Type': 'application/json'
 //         },
-//         credentials: 'include',
+//         credentials: 'same-origin',
 //         body: JSON.stringify(data)
 //     })
-//     let returnData = await res.json()
+//     const returnData = await res.json()
 //     if (returnData.msg == 'new_token') {
-//         console.log('refreshed token')
-//         returnData = apiFetchGetData(url, method, data)
-//     }
-//     if (returnData.error != 0) {
-//         const { msg, error }: ApiStatusResponse = returnData
-//         console.log('errored' + error)
-//         console.log(`send: ${method} ${url} ${data}`)
-//         console.log(`got: ${JSON.stringify(returnData)}`)
-//         return statusErrorHandler({ msg, error })
-//     }
-//     return returnData
+//         return apiFetchGetData(url, method, data)
+//     } else if (!returnData.error) return returnData
+//     const { msg, error } = returnData
+//     return statusErrorHandler({ msg, error })
 // }
