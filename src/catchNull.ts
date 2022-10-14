@@ -4,8 +4,8 @@ export const catchNull =
         try {
             // ? doesn't allow spreading args
             // @ts-ignore
-            return throwingFn(...args);
+            return throwingFn(...args)
         } catch (error) {
-            return null;
+            return null
         }
-    };
+    }

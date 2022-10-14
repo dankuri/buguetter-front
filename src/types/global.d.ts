@@ -1,8 +1,8 @@
-export {};
+export {}
 
 declare global {
-    type ApiResponse = {
-        msg: string;
-        error: number;
-    };
+    type ApiStatusResponse = {
+        msg: string
+        error: number
+    }
 }

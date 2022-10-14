@@ -1,7 +1,7 @@
 export default function ErrorScreen() {
     return (
-        <div className="h-screen flex flex-col items-center justify-center text-red-600 text-3xl">
+        <div className="flex grow flex-col items-center justify-center text-3xl text-red-600">
             server not working!
         </div>
-    );
+    )
 }
