@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Avatar from './Avatar'
+import moment from 'moment'
 
 type Props = {
     id: number
@@ -22,14 +23,14 @@ const reactions = {
     shit: '💩'
 }
 
-const formatDate = (date: number) => {
-    const dateObject = new Date(date)
-    const day = dateObject.getDate()
-    const rawMonth = dateObject.getMonth() + 1
-    const month = rawMonth < 10 ? `0${rawMonth}` : rawMonth
-    const year = dateObject.getFullYear().toString().slice(2)
-    return `${day}/${month}/${year}`
-}
+// const formatDate = (date: number) => {
+//     const dateObject = new Date(date)
+//     const day = dateObject.getDate()
+//     const rawMonth = dateObject.getMonth() + 1
+//     const month = rawMonth < 10 ? `0${rawMonth}` : rawMonth
+//     const year = dateObject.getFullYear().toString().slice(2)
+//     return `${day}/${month}/${year}`
+// }
 
 export default function Post({ id, text, reactionsCount, date, user }: Props) {
     const [reaction, setReaction] = useState(reactionsCount.user_reaction)
@@ -99,7 +100,9 @@ export default function Post({ id, text, reactionsCount, date, user }: Props) {
                         {reactionsCount.shit}
                     </button> */}
                 </div>
-                <div className="post_date inline-block">{formatDate(date)}</div>
+                <div className="post_date inline-block">
+                    {moment.unix(date).format('DD/MM/YY')}
+                </div>
             </footer>
         </div>
     )
