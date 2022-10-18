@@ -11,7 +11,6 @@ export default ({ mode }) => {
             port: 8080,
             cors: true,
             host: 'localhost',
-            open: true,
             proxy: {
                 '/api': {
                     target: process.env.VITE_API_URL,
