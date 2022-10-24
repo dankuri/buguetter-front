@@ -1,34 +1,26 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { apiLogoutCatching } from '../auth'
-import { errors } from '../errors'
+import { useMutation } from '@apollo/client'
+import { LogoutDocument } from '../graphql/gql'
 
 type Props = {
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
-    setUserName: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function LogoutBtn({ setLoggedIn, setUserName }: Props) {
-    const [error, setError] = useState('')
+export default function LogoutBtn({ setLoggedIn }: Props) {
+    const [logoutMutation, { error }] = useMutation(LogoutDocument)
     const navigate = useNavigate()
 
     const logout = async () => {
-        const response = await apiLogoutCatching()
-        if (response == 'success') {
+        const res = await logoutMutation()
+        if (res.data?.logout.error == 0) {
             setLoggedIn(false)
-            setUserName('')
-        } else if (
-            response == errors[8] ||
-            response == errors[9] ||
-            response == errors[10]
-        ) {
-            navigate('/login')
-        } else if (typeof response == 'string') setError(response)
+            navigate('/')
+        }
     }
 
     return (
         <div className="mr-6">
-            {error && <h2 className="">{error}</h2>}
+            {error && <h2 className="">{error.message}</h2>}
             <button className="btn " onClick={logout}>
                 logout
             </button>

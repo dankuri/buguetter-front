@@ -1,4 +1,4 @@
-query getUser($userId: Int!) {
+query UserFull($userId: Int!) {
     user(id: $userId) {
         id
         name
@@ -11,5 +11,12 @@ query getUser($userId: Int!) {
             id
             name
         }
+    }
+}
+
+query UserMin($userId: Int!) {
+    user(id: $userId) {
+        id
+        name
     }
 }

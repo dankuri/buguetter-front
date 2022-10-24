@@ -1,44 +1,41 @@
 import { FormEventHandler, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { apiLoginCatching } from '../auth'
-import { getUserCatching } from '../getUser'
+import { useMutation } from '@apollo/client'
+import { LoginDocument } from '../graphql/gql'
 import Input from './Input'
 
 type Props = {
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
-    setUserName: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function LoginForm({ setLoggedIn, setUserName }: Props) {
+export default function LoginForm({ setLoggedIn }: Props) {
     const navigate = useNavigate()
     const [login, setLogin] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const [loginMutation] = useMutation(LoginDocument)
 
     const sendLogin: FormEventHandler<HTMLFormElement> = async ev => {
         ev.preventDefault()
+        setError('')
         if (login === '') setError('empty login!')
         else if (password === '') setError('empty password!')
         else {
-            const response = await apiLoginCatching({ login, password })
-            if (response == 'success') {
-                const data = await getUserCatching()
-                if (data.name) {
-                    setUserName(data.name)
-                    setLoggedIn(true)
-                    navigate('/')
-                } else {
-                    setError('cannot get name')
-                }
-            } else if (typeof response == 'string') {
-                setError(response)
+            const res = await loginMutation({
+                variables: { login, password }
+            })
+            if (res.data) {
+                setLoggedIn(true)
+                navigate('/')
+            } else if (res.errors) {
+                setError(res.errors[0].message)
             }
         }
     }
 
     return (
         <div className="flex grow flex-col items-center justify-center">
-            {error && <h2>{error}</h2>}
+            {error ? <h2>{error}</h2> : null}
             <form id="auth-form" action="#" onSubmit={sendLogin}>
                 <Input
                     placeholder="login"
