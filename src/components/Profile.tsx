@@ -28,6 +28,7 @@ export default function Profile({ current, name, userId }: Props) {
         variables: {
             limit: 20,
             offset: 0,
+            // TODO: set this to section to switch between posts, likes & comments
             selection: 'profile',
             userId: 0
         },
