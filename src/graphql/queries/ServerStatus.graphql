@@ -1,0 +1,6 @@
+query ServerStatus {
+    status {
+        msg
+        error
+    }
+}

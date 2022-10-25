@@ -1,0 +1,15 @@
+query Feed($userId: Int, $limit: Int!, $offset: Int!, $selection: String!) {
+    feed(id: $userId, limit: $limit, offset: $offset, selection: $selection) {
+        id
+        text
+        date
+        comment {
+            text
+            authorId
+        }
+        likes {
+            userId
+            reaction
+        }
+    }
+}

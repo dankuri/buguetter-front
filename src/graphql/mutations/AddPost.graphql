@@ -1,0 +1,6 @@
+mutation AddPost($text: String!, $tags: [String!]) {
+    addPost(text: $text, tags: $tags) {
+        id
+        date
+    }
+}
