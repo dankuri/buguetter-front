@@ -30,14 +30,14 @@ for local server:
 -   launch development mode:
 
 ```bash
-npm i
-npm run dev
+yarn
+yarn dev
 ```
 
 -   build and launch production mode:
 
 ```bash
-npm i
-npm run build
+yarn
+yarn build
 npx serve dist
 ```
