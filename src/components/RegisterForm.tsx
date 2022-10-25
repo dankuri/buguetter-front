@@ -6,41 +6,44 @@ import Input from './Input'
 
 type Props = {
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
+    refetch: () => void
 }
 
-export default function RegisterForm({ setLoggedIn }: Props) {
+export default function RegisterForm({ setLoggedIn, refetch }: Props) {
     const navigate = useNavigate()
     const [name, setName] = useState('')
     const [login, setLogin] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
-    const [registerMutation] = useMutation(RegisterDocument)
+    const [registerMutation, { error: mutError, reset }] =
+        useMutation(RegisterDocument)
 
     const sendRegister: FormEventHandler<HTMLFormElement> = async ev => {
         ev.preventDefault()
+        setError('')
+        reset()
         if (name === '') setError('empty name!')
         else if (login === '') setError('empty login!')
         else if (password === '') setError('empty password!')
         else {
-            const res = await registerMutation({
+            await registerMutation({
                 variables: {
                     name,
                     login,
                     password
                 }
-            })
-            if (res.data) {
+            }).then(() => {
+                refetch()
                 setLoggedIn(true)
                 navigate('/')
-            } else if (res.errors) {
-                setError(res.errors[0].message)
-            }
+            })
         }
     }
 
     return (
         <div className="flex grow flex-col items-center justify-center">
             {error ? <h2>{error}</h2> : null}
+            {mutError ? <h2>{mutError.message}</h2> : null}
             <form action="#" onSubmit={sendRegister}>
                 <Input
                     placeholder="name"
