@@ -93,7 +93,7 @@ export default function Profile({ current, name, userId }: Props) {
                                     id={post.id}
                                     text={post.text}
                                     date={post.date}
-                                    reactionsCount={post.likes}
+                                    reactions={post.likes}
                                     userId={userId}
                                     key={post.id}
                                 />

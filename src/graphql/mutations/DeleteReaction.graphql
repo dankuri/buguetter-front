@@ -1,0 +1,8 @@
+mutation DeleteReaction($section: String!, $postId: Int!) {
+    deleteReaction(select: $section, selectionId: $postId) {
+        likes {
+            userId
+            reaction
+        }
+    }
+}
