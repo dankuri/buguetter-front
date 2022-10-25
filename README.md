@@ -25,7 +25,7 @@ roadmap:
 
 for local server:
 
--   add file `.env` in project's root folder with `VITE_API_URL=<your backend url>`
+-   if your api url is different, add file `.env.local` in project's root folder with `VITE_API_URL=<your backend url>`
 
 -   launch development mode:
 
