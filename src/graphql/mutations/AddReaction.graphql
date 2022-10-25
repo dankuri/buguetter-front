@@ -1,0 +1,8 @@
+mutation AddReaction($reaction: String!, $section: String!, $postId: Int!) {
+    addReaction(reaction: $reaction, select: $section, selectionId: $postId) {
+        likes {
+            userId
+            reaction
+        }
+    }
+}

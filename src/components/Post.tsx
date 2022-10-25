@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import moment from 'moment'
 import Avatar from './Avatar'
+import { useMutation } from '@apollo/client'
+import { AddReactionDocument, DeleteReactionDocument } from '../graphql/gql'
 
-type Props = {
+type PostProps = {
     id: number
     text: string
-    reactionsCount: {
+    reactions: {
         userId: number
         reaction: string
     }[]
@@ -14,24 +16,81 @@ type Props = {
     userId: number
 }
 
-const reactions = {
+type ReactionProps = {
+    type: 'cool' | 'nice' | 'angry' | 'shit'
+    count: number
+    selected: boolean
+    onClick: () => Promise<void>
+}
+
+const reactionEmojis = {
     cool: '😎',
     nice: '👍',
     angry: '😠',
     shit: '💩'
 }
 
+const Reaction = ({ type, count, selected, onClick }: ReactionProps) => {
+    return (
+        <button
+            className={selected ? 'btn text-green-500' : 'btn'}
+            onClick={onClick}
+        >
+            {reactionEmojis[type]} {count}
+        </button>
+    )
+}
+
 export default function Post({
     id,
     text,
-    reactionsCount,
+    reactions,
     date,
     user,
     userId
-}: Props) {
+}: PostProps) {
     const userReaction: string =
-        reactionsCount.find(value => value.userId === userId)?.reaction || ''
+        reactions.find(value => value.userId === userId)?.reaction || ''
+
+    const [reactionCount] = useState({
+        cool: reactions.filter(reaction => reaction.reaction == 'cool').length,
+        nice: reactions.filter(reaction => reaction.reaction == 'nice').length,
+        angry: reactions.filter(reaction => reaction.reaction == 'angry')
+            .length,
+        shit: reactions.filter(reaction => reaction.reaction == 'shit').length
+    })
+
     const [reaction, setReaction] = useState(userReaction)
+    const [addReactionMutation] = useMutation(AddReactionDocument)
+    const [deleteReactionMutation] = useMutation(DeleteReactionDocument)
+
+    const sendReaction = async (
+        newReaction: 'cool' | 'nice' | 'angry' | 'shit'
+    ) => {
+        // FIXME: try to avoid this ts ignore
+        // @ts-ignore
+        if (reaction) reactionCount[reaction] -= 1
+        if (reaction != newReaction) {
+            setReaction(newReaction)
+            await addReactionMutation({
+                variables: {
+                    postId: id,
+                    reaction: newReaction,
+                    section: 'post'
+                }
+            })
+            reactionCount[newReaction] += 1
+        } else {
+            setReaction('')
+            await deleteReactionMutation({
+                variables: {
+                    postId: id,
+                    section: 'post'
+                }
+            })
+        }
+    }
+    // TODO: change it so it updates with incoming data
     return (
         <div className="post border-b-2 border-green-400 p-4 text-2xl last:border-0">
             {user && (
@@ -43,88 +102,30 @@ export default function Post({
             <p className="block pb-2 text-left">{text}</p>
             <footer className="flex items-center justify-between">
                 <div className="reactions">
-                    {/* FIXME: change this to map incoming reactionsCount object */}
-                    <button
-                        className={
-                            reaction == 'cool' ? 'btn text-green-500' : 'btn'
-                        }
-                    >
-                        {reactions.cool}:{' '}
-                        {
-                            reactionsCount.filter(el => el.reaction == 'cool')
-                                .length
-                        }
-                    </button>
-                    <button
-                        className={
-                            reaction == 'like' ? 'btn text-green-500' : 'btn'
-                        }
-                    >
-                        {reactions.cool}:{' '}
-                        {
-                            reactionsCount.filter(el => el.reaction == 'like')
-                                .length
-                        }
-                    </button>
-                    <button
-                        className={
-                            reaction == 'shit' ? 'btn text-green-500' : 'btn'
-                        }
-                    >
-                        {reactions.cool}:{' '}
-                        {
-                            reactionsCount.filter(el => el.reaction == 'shit')
-                                .length
-                        }
-                    </button>
-                    <button
-                        className={
-                            reaction == 'angry' ? 'btn text-green-500' : 'btn'
-                        }
-                    >
-                        {reactions.cool}:{' '}
-                        {
-                            reactionsCount.filter(el => el.reaction == 'angry')
-                                .length
-                        }
-                    </button>
-                    {/* {reactionsCount.map(reaction => {
-                        return (
-                            <button
-                                className={
-                                    reaction.reaction == userReaction
-                                        ? 'btn text-green-500'
-                                        : 'btn'
-                                }
-                                onClick={() => {
-                                    setReaction(reaction.reaction)
-                                }}
-                                key={id + reaction.reaction}
-                            >
-                                {reactions[reaction.reaction]}
-                                {reactionsCount[reaction.reaction]}
-                            </button>
-                        )
-                    })} */}
-                    {/* {Object.keys(reactionsCount).map(key => {
-                        if (key == 'user_reaction') return
-                        return (
-                            <button
-                                className={
-                                    reaction == key
-                                        ? 'btn text-green-500'
-                                        : 'btn'
-                                }
-                                onClick={() => {
-                                    setReaction(key)
-                                }}
-                                key={id + reactions[key]}
-                            >
-                                {reactions[key]}
-                                {reactionsCount[key]}
-                            </button>
-                        )
-                    })} */}
+                    <Reaction
+                        count={reactionCount.cool}
+                        selected={reaction == 'cool'}
+                        type="cool"
+                        onClick={() => sendReaction('cool')}
+                    />
+                    <Reaction
+                        count={reactionCount.nice}
+                        selected={reaction == 'nice'}
+                        type="nice"
+                        onClick={() => sendReaction('nice')}
+                    />
+                    <Reaction
+                        count={reactionCount.angry}
+                        selected={reaction == 'angry'}
+                        type="angry"
+                        onClick={() => sendReaction('angry')}
+                    />
+                    <Reaction
+                        count={reactionCount.shit}
+                        selected={reaction == 'shit'}
+                        type="shit"
+                        onClick={() => sendReaction('shit')}
+                    />
                 </div>
                 <div className="post_date inline-block">
                     {moment.unix(date).format('DD/MM/YY')}
