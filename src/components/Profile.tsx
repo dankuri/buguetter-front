@@ -1,10 +1,11 @@
 import { useQuery } from '@apollo/client'
 import { useState } from 'react'
 import { FeedDocument, UserFullDocument } from '../graphql/gql'
-import Avatar from './Avatar'
-import LoadingScreen from './LoadingScreen'
-import Post from './Post'
 import moment from 'moment'
+
+import LoadingScreen from './LoadingScreen'
+import Avatar from './Avatar'
+import Post from './Post'
 
 type Props = {
     current: boolean

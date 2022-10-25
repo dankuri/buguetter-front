@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import Avatar from './Avatar'
 import moment from 'moment'
+import Avatar from './Avatar'
 
 type Props = {
     id: number

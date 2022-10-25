@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import { useQuery } from '@apollo/client'
+import { UserFullDocument } from '../graphql/gql'
 
 import LoadingScreen from './LoadingScreen'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 import Navbar from './Navbar'
 import Profile from './Profile'
-import { useQuery } from '@apollo/client'
-import { UserFullDocument } from '../graphql/gql'
 
 export default function App() {
     const navigate = useNavigate()
