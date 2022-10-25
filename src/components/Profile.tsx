@@ -28,9 +28,10 @@ export default function Profile({ current, name, userId }: Props) {
         variables: {
             limit: 20,
             offset: 0,
-            selection: section,
+            selection: 'profile',
             userId: 0
-        }
+        },
+        fetchPolicy: 'cache-and-network'
     })
 
     if (!data || loading) return <LoadingScreen />
