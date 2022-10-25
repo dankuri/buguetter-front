@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import moment from 'moment'
 import Avatar from './Avatar'
 import { useMutation } from '@apollo/client'
