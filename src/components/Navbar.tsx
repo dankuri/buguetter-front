@@ -6,10 +6,10 @@ type Props = {
     isLoggedIn: boolean
     userName: string
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
-    setUserName: React.Dispatch<React.SetStateAction<string>>
+    refetch: () => void
 }
 
-function Navbar({ isLoggedIn, userName, setLoggedIn, setUserName }: Props) {
+function Navbar({ isLoggedIn, userName, setLoggedIn, refetch }: Props) {
     return (
         <div className="sticky top-0 flex w-screen items-center justify-between bg-slate-700 py-2 px-6">
             <Link to={'/'}>
@@ -21,10 +21,7 @@ function Navbar({ isLoggedIn, userName, setLoggedIn, setUserName }: Props) {
                 <div className="flex items-center justify-between">
                     <Avatar name={userName} size={64} />
                     <div className="spacer m-2"></div>
-                    <LogoutBtn
-                        setUserName={setUserName}
-                        setLoggedIn={setLoggedIn}
-                    />
+                    <LogoutBtn setLoggedIn={setLoggedIn} refetch={refetch} />
                 </div>
             )}
         </div>

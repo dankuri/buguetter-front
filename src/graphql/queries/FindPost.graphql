@@ -1,0 +1,23 @@
+query FindPost($id: Int!) {
+    find(id: $id) {
+        id
+        text
+        date
+        author
+        authorId
+        comment {
+            id
+            text
+            authorId
+            date
+            likes {
+                userId
+                reaction
+            }
+        }
+        likes {
+            userId
+            reaction
+        }
+    }
+}

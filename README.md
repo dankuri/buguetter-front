@@ -1,23 +1,25 @@
 # buguetter-front
 
 this is frontend for 🥖 **buguetter** 🥖  
-a twitter clone from @samaxe13 & @GrozaMorey  
+a twitter clone from @samaxe13 & @GrozaMorey
 
 frontend is [TS](https://www.typescriptlang.org/) + [React](https://reactjs.org/) + [Vite](https://vitejs.dev/)  
-backend is [Flask](https://flask.palletsprojects.com) + [Postgresql](https://www.postgresql.org/)
+backend is [Flask](https://flask.palletsprojects.com/) + [Strawberry(GraphQL)](https://strawberry.rocks/) + [Postgresql](https://www.postgresql.org/)
 
 [//]: # 'insert deployed link ^ in buguetter name'
 
 ---
+
 roadmap:
-- [x] auth
-- [ ] profiles
-- [ ] followers
-- [ ] posts
-  - [ ] comments
-  - [ ] reactions
-  - [ ] hashtags
-- [ ] feed 
+
+-   [x] auth
+-   [ ] profiles
+-   [ ] followers
+-   [ ] posts
+    -   [ ] comments
+    -   [ ] reactions
+    -   [ ] hashtags
+-   [ ] feed
 
 ---
 

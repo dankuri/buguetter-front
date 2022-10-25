@@ -1,0 +1,22 @@
+query UserFull($userId: Int!) {
+    user(id: $userId) {
+        id
+        name
+        date
+        follower {
+            id
+            name
+        }
+        following {
+            id
+            name
+        }
+    }
+}
+
+query UserMin($userId: Int!) {
+    user(id: $userId) {
+        id
+        name
+    }
+}

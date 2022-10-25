@@ -16,15 +16,3 @@ export const errors: { [key: number]: string } = {
     15: 'no user with this name',
     16: 'refresh token expired'
 }
-
-export const statusErrorHandler = ({ msg, error }: ApiStatusResponse) => {
-    if (msg == 'success') {
-        return 'success'
-    } else if (error in errors) {
-        return errors[error]
-    } else if (error) {
-        return 'unknown error'
-    } else {
-        return 'invalid response'
-    }
-}

@@ -1,41 +1,45 @@
-import { useEffect, useState } from 'react'
-import Avatar from './Avatar'
+import { useQuery } from '@apollo/client'
+import { useState } from 'react'
+import { FeedDocument, UserFullDocument } from '../graphql/gql'
+import moment from 'moment'
+
 import LoadingScreen from './LoadingScreen'
+import Avatar from './Avatar'
 import Post from './Post'
 
 type Props = {
     current: boolean
     name: string
-    followers: number
-    following: number
     userId: number
 }
 
-type Posts = {
-    [id: number]: {
-        data: number
-        reactions: {
-            angry: number
-            cool: number
-            nice: number
-            shit: number
-            user_reaction: 'angry' | 'cool' | 'nice' | 'shit' | null
-        }
-        text: string
-    }
-}
-
-export default function Profile({
-    current,
-    name,
-    followers,
-    following,
-    userId
-}: Props) {
+export default function Profile({ current, name, userId }: Props) {
     const [section, setSection] = useState('posts')
-    const [posts, setPosts] = useState<Posts>({})
-    const [isLoading, setLoading] = useState(false)
-    const dateJoined = '24/12/22'
+    const { data, loading, error } = useQuery(UserFullDocument, {
+        variables: {
+            userId: userId
+        }
+    })
+    const {
+        data: feedData,
+        loading: feedLoading,
+        error: feedError
+    } = useQuery(FeedDocument, {
+        variables: {
+            limit: 20,
+            offset: 0,
+            selection: section,
+            userId: 0
+        }
+    })
+
+    if (!data || loading) return <LoadingScreen />
+
+    const userData = {
+        following: data.user.following,
+        followers: data.user.follower,
+        dateJoined: moment.unix(data.user.date).format('DD/MM/YY')
+    }
 
     const editProfile = () => {
         console.log('edit profile click')
@@ -44,35 +48,6 @@ export default function Profile({
     const follow = () => {
         console.log('follow')
     }
-    // TODO: add sections to deps and different routes for them
-    useEffect(() => {
-        console.log('Profile useEffect')
-        setLoading(true)
-        const getPosts = async () => {
-            try {
-                const res = await fetch('/api/get_user_post', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'same-origin',
-                    body: JSON.stringify({ user_id: userId })
-                })
-                const data = await res.json()
-                if (data.msg == 'new_token') getPosts()
-                else {
-                    setPosts(data)
-                    console.log(data)
-                    setLoading(false)
-                }
-            } catch (error) {
-                console.error(error)
-                setLoading(false)
-            }
-        }
-
-        getPosts()
-    }, [userId])
 
     return (
         <div className="m-auto flex grow flex-col rounded-2xl border-2 border-white text-center sm:w-[640px] md:w-[768px]">
@@ -92,9 +67,10 @@ export default function Profile({
                 )}
                 <div className="profile_panel_numbers flex w-full justify-between">
                     <span>
-                        {followers} followers, {following} following
+                        {userData.followers.length} followers,{' '}
+                        {userData.following.length} following
                     </span>
-                    <span>joined {dateJoined}</span>
+                    <span>joined {userData.dateJoined}</span>
                 </div>
             </div>
             <div className="profile_panel_select grid grid-cols-3 space-x-7 border-b-2 text-2xl">
@@ -110,16 +86,19 @@ export default function Profile({
             </div>
             {section == 'posts' ? (
                 <div className="posts">
-                    {!isLoading ? (
-                        Object.keys(posts).map(key => (
-                            <Post
-                                id={parseInt(key)}
-                                text={posts[parseInt(key)].text}
-                                date={posts[parseInt(key)].data * 1000}
-                                reactionsCount={posts[parseInt(key)].reactions}
-                                key={parseInt(key)}
-                            />
-                        ))
+                    {!feedLoading && feedData ? (
+                        feedData.feed.map(post => {
+                            return (
+                                <Post
+                                    id={post.id}
+                                    text={post.text}
+                                    date={post.date}
+                                    reactionsCount={post.likes}
+                                    userId={userId}
+                                    key={post.id}
+                                />
+                            )
+                        })
                     ) : (
                         <LoadingScreen />
                     )}
