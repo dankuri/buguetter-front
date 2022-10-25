@@ -17,7 +17,7 @@ roadmap:
 -   [ ] followers
 -   [ ] posts
     -   [ ] comments
-    -   [ ] reactions
+    -   [x] reactions
     -   [ ] hashtags
 -   [ ] feed
 
