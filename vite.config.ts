@@ -6,7 +6,8 @@ export default ({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
     return defineConfig({
         plugins: [react()],
-        base: '/buguetter-front/',
+        // for github pages
+        // base: '/buguetter-front/',
         server: {
             port: 8080,
             cors: true,
